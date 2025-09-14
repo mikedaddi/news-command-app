@@ -5,7 +5,6 @@
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>News Command Center</title>
   <link rel="stylesheet" href="style.css" />
-  <!-- Optional: fontawesome for icons (used for delete icon). If offline, delete this line. -->
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
 </head>
 <body class="light-mode">
@@ -14,12 +13,12 @@
       <button id="sidebar-toggle" class="hamburger" aria-label="Toggle sidebar">☰</button>
       <div class="topbar-title">News Command Center</div>
       <div class="topbar-actions">
+        <input type="text" id="search-input" placeholder="Search news or #tags..." />
         <button id="toggle-dark" class="icon-btn" title="Toggle theme">🌙</button>
       </div>
     </header>
 
     <div class="app-container">
-      <!-- Sidebar -->
       <aside class="sidebar-feeds" id="sidebar">
         <div class="sidebar-header">
           <h1>📡 My Feeds</h1>
@@ -28,18 +27,13 @@
             <button id="how-to-btn" class="small">❓ How To</button>
           </div>
         </div>
-
-        <div id="feed-list" class="feed-list">
-          <!-- feeds injected here -->
-        </div>
-
+        <div id="feed-list" class="feed-list"></div>
         <footer class="sidebar-footer">
           <small>Saved locally · Offline-ish</small>
           <button id="reset-feeds-btn" class="small ghost">Reset Defaults</button>
         </footer>
       </aside>
 
-      <!-- Main -->
       <main class="main-content">
         <section id="article-container" class="article-grid">
           <div class="placeholder">
@@ -50,9 +44,7 @@
 
         <aside class="bookmarks-panel">
           <h3>🔖 Bookmarks</h3>
-          <div id="bookmarks" class="bookmarks-list">
-            <!-- saved articles appear here -->
-          </div>
+          <div id="bookmarks" class="bookmarks-list"></div>
         </aside>
       </main>
     </div>
@@ -62,9 +54,9 @@
   <div id="add-feed-modal" class="modal hidden" role="dialog" aria-modal="true">
     <div class="modal-box">
       <h2>Add Feed</h2>
-      <label>Feed Name</label>
+      <label for="feed-name-input">Feed Name</label>
       <input id="feed-name-input" type="text" placeholder="e.g. BBC World" />
-      <label>Feed URL (RSS/Atom)</label>
+      <label for="feed-url-input">Feed URL (RSS/Atom)</label>
       <input id="feed-url-input" type="url" placeholder="https://feeds.example.com/rss.xml" />
       <div class="modal-actions">
         <button id="save-feed-btn" class="primary">Save</button>
