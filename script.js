@@ -1,4 +1,3 @@
-// script.js - upgraded version
 document.addEventListener('DOMContentLoaded', () => {
   const CORS_PROXY = 'https://api.allorigins.win/raw?url=';
   const STORAGE_KEY = 'commandCenterFeeds';
@@ -25,7 +24,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const toggleDarkBtn = document.getElementById('toggle-dark');
   const resetFeedsBtn = document.getElementById('reset-feeds-btn');
   const sidebarToggle = document.getElementById('sidebar-toggle');
-  const sidebar = document.querySelector('.sidebar-feeds');
+  const sidebar = document.getElementById('sidebar');
   const searchInput = document.getElementById('search-input');
 
   let feeds = [];
@@ -98,64 +97,4 @@ document.addEventListener('DOMContentLoaded', () => {
       const entries = doc.querySelectorAll('entry');
       const source = items.length ? items : entries;
       if (!source.length) {
-        articleContainer.innerHTML = '<p style="text-align:center;color:var(--danger)">No items found.</p>';
-        return;
-      }
-
-      articleContainer.innerHTML = '';
-      source.forEach((node, idx) => {
-        if (idx >= 12) return;
-        const title = node.querySelector('title')?.textContent || 'No title';
-        const link = node.querySelector('link')?.textContent || node.querySelector('link')?.getAttribute('href') || '#';
-        let desc = node.querySelector('description')?.textContent || node.querySelector('summary')?.textContent || node.querySelector('content')?.textContent || '';
-        desc = desc.replace(/<[^>]+>/g,'').slice(0,240);
-        const pub = node.querySelector('pubDate')?.textContent || node.querySelector('updated')?.textContent || node.querySelector('published')?.textContent || '';
-        const media = node.querySelector('media\\:content, enclosure, media\\:thumbnail');
-        const thumb = media ? (media.getAttribute('url') || media.getAttribute('href')) : '';
-
-        const a = document.createElement('a');
-        a.className = 'article-card';
-        a.href = link;
-        a.target = '_blank';
-        a.rel = 'noopener noreferrer';
-        a.innerHTML = `
-          ${thumb ? `<img class="article-image" src="${escapeHtml(thumb)}" alt="">` : `<div class="article-image" style="background:#e8e8e8"></div>`}
-          <div class="article-content">
-            <h2>${escapeHtml(title)}</h2>
-            <p>${escapeHtml(desc)}</p>
-            <div class="article-meta">${escapeHtml(pub)}</div>
-          </div>
-        `;
-        articleContainer.appendChild(a);
-        a.addEventListener('contextmenu', (e) => { e.preventDefault(); saveBookmarkFromElement(a); });
-      });
-    } catch (err) {
-      console.error('Fetch error', err);
-      articleContainer.innerHTML = `<p style="text-align:center;color:var(--danger)">Failed to load feed (${escapeHtml(err.message)})</p>`;
-    }
-  }
-
-  function saveBookmarkFromElement(element) {
-    const title = element.querySelector('.article-content h2')?.textContent || '';
-    const desc = element.querySelector('.article-content p')?.textContent || '';
-    const href = element.href || '#';
-    const exists = Array.from(bookmarksContainer.querySelectorAll('a')).some(a => a.href === href);
-    if (exists) { alert('Already bookmarked.'); return; }
-
-    const card = document.createElement('a');
-    card.className = 'article-card';
-    card.href = href;
-    card.target = '_blank';
-    card.rel = 'noopener noreferrer';
-    card.innerHTML = `
-      <div class="article-image" style="background:#fff8dc"></div>
-      <div class="article-content"><h2>${escapeHtml(title)}</h2><p>${escapeHtml(desc.slice(0,120))}</p></div>
-    `;
-    bookmarksContainer.prepend(card);
-  }
-
-  function addFeed(name, url) {
-    const n = (name || '').trim();
-    const u = normalizeUrl((url || '').trim());
-    if (!u) { alert('Please enter a valid URL'); return false; }
-    feeds.push
+        articleContainer
