@@ -134,4 +134,16 @@ document.addEventListener('DOMContentLoaded', () => {
   // events
   document.getElementById('add-feed-btn').onclick=()=>addModal.classList.remove('hidden');
   addCancel.onclick=()=>addModal.classList.add('hidden');
-  addSave.onclick=()=>{feeds.push({name:addName.value||addUrl.value,url:addUrl.value});
+  addSave.onclick=()=>{feeds.push({name:addName.value||addUrl.value,url:addUrl.value});save();renderFeeds();addModal.classList.add('hidden');showToast("Feed added");};
+  howtoBtn.onclick=()=>howtoModal.classList.remove('hidden');
+  howtoClose.onclick=()=>howtoModal.classList.add('hidden');
+  bookmarksBtn.onclick=()=>{renderBookmarks();bookmarksModal.classList.remove('hidden');};
+  bookmarksClose.onclick=()=>bookmarksModal.classList.add('hidden');
+  feedList.onclick=(e)=>{const i=e.target.dataset.idx; if(e.target.matches('.fa-times')){undoFeed=feeds[i];feeds.splice(i,1);save();renderFeeds();showToast("Feed removed",()=>{feeds.splice(i,0,undoFeed);save();renderFeeds();});} else if(e.target.closest('.feed-item')){loadFeed(e.target.closest('.feed-item').dataset.idx);} };
+  feedFilter.oninput=()=>renderFeeds(feedFilter.value);
+  function doSearch(){if(!topSearch.value)return;window.open("https://duckduckgo.com/?q="+encodeURIComponent(topSearch.value),'_blank');}
+  topSearch.onkeydown=(e)=>{if(e.key==="Enter")doSearch();};
+  topSearchBtn.onclick=doSearch;
+
+  load();renderFeeds();if(feeds.length)loadFeed(0);
+});
