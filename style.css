@@ -1,98 +1,20 @@
-:root{
-  --bg:#0f1113;
-  --panel:#121416;
-  --muted:#9aa4ae;
-  --accent:#1e90ff;
-  --card:#16181a;
-  --card-2:#1f2224;
-  --glass: rgba(255,255,255,0.03);
-  --danger:#e06a6a;
-  --success:#5ac18e;
-  --shadow: 0 8px 30px rgba(0,0,0,0.45);
-  --radius:10px;
-  --glass-2: rgba(255,255,255,0.02);
+/* Headline / link colors */
+.article-body h4 {
+  margin: 0 0 6px 0;
+  color: #4da8ff;  /* brighter cyan-blue */
+  transition: color .2s;
+}
+.article:hover h4 {
+  color: #76c6ff;  /* hover brighter */
 }
 
-*{box-sizing:border-box}
-html,body{height:100%;margin:0;font-family:Inter, "Segoe UI", system-ui, -apple-system, Roboto, Arial;}
-body{background:var(--bg);color:#e9eef5}
-
-/* Topbar */
-.topbar{height:64px;display:flex;align-items:center;justify-content:space-between;padding:8px 16px;border-bottom:1px solid rgba(255,255,255,0.03);position:sticky;top:0;z-index:50}
-.topbar-left{display:flex;align-items:center;gap:12px}
-.brand{font-weight:700;font-size:1rem}
-.icon-btn{background:transparent;border:none;color:inherit;font-size:18px;cursor:pointer;padding:8px;border-radius:8px}
-.icon-btn:hover{background:var(--glass)}
-.topbar-center{flex:1;display:flex;justify-content:center;padding:0 12px}
-.global-search{width:70%;max-width:740px;padding:10px 12px;border-radius:999px;border:1px solid rgba(255,255,255,0.04);background:rgba(255,255,255,0.02);color:inherit;outline:none}
-.global-search::placeholder{color:var(--muted)}
-.topbar-right{display:flex;align-items:center;gap:8px}
-
-/* layout */
-.app-layout{display:flex;min-height:calc(100vh - 64px)}
-.sidebar{width:300px;padding:18px;background:linear-gradient(180deg,var(--glass-2),transparent);border-right:1px solid rgba(255,255,255,0.02)}
-.sidebar-header{display:flex;flex-direction:column;gap:8px}
-.sidebar-header h2{margin:0;font-size:1.1rem}
-.sidebar-actions{display:flex;gap:8px}
-.small{font-size:13px;padding:6px 10px;border-radius:8px}
-.primary{background:var(--accent);color:#fff;border:none;padding:8px;border-radius:8px;cursor:pointer}
-.ghost{background:transparent;border:1px solid rgba(255,255,255,0.04);color:inherit;padding:8px;border-radius:8px;cursor:pointer}
-.feed-filter{padding:8px;border-radius:8px;border:1px solid rgba(255,255,255,0.03);background:transparent;color:inherit}
-
-/* feed list */
-.feed-list{margin-top:12px;display:flex;flex-direction:column;gap:8px;overflow:auto;padding-right:6px}
-.feed-item{display:flex;align-items:center;justify-content:space-between;padding:10px 12px;border-radius:10px;background:var(--card);border:1px solid rgba(255,255,255,0.02);cursor:pointer;transition:transform .12s,box-shadow .12s}
-.feed-item:hover{transform:translateY(-3px);box-shadow:var(--shadow)}
-.feed-meta{display:flex;align-items:center;gap:8px}
-.feed-name{font-weight:600}
-.feed-controls{display:flex;gap:8px;align-items:center}
-.feed-controls button{background:transparent;border:none;color:var(--muted);cursor:pointer;padding:6px;border-radius:6px}
-.feed-controls button:hover{color:#fff}
-
-/* main */
-.main{flex:1;padding:20px;overflow:auto}
-.hero{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
-.hero h3{margin:0 0 4px 0}
-.article-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:16px}
-.placeholder{padding:24px;border-radius:12px;background:var(--card);border:1px solid rgba(255,255,255,0.02)}
-
-/* article card */
-.article{display:flex;gap:12px;background:var(--card-2);border-radius:12px;padding:12px;border:1px solid rgba(255,255,255,0.02);transition:transform .12s,box-shadow .12s;align-items:flex-start;text-decoration:none;color:inherit}
-.article:hover{transform:translateY(-6px);box-shadow:var(--shadow)}
-.thumb{width:140px;height:90px;background:#222;border-radius:8px;flex-shrink:0;background-size:cover;background-position:center}
-.article-body{flex:1}
-.article-body h4{margin:0 0 6px 0}
-.article-body p{margin:0;color:var(--muted);font-size:0.95rem}
-.article-meta{margin-top:8px;color:var(--muted);font-size:0.82rem;display:flex;gap:8px;align-items:center}
-
-/* share bar */
-.share-bar{display:flex;gap:10px;margin-top:8px}
-.share-btn{background:transparent;border:none;color:var(--muted);cursor:pointer;padding:6px;border-radius:6px}
-.share-btn:hover{color:var(--accent)}
-
-/* drawer bookmarks */
-.drawer{position:fixed;right:0;top:64px;bottom:0;width:380px;background:linear-gradient(180deg, rgba(255,255,255,0.02), transparent);border-left:1px solid rgba(255,255,255,0.02);z-index:60;display:flex;flex-direction:column;padding:12px}
-.drawer.hidden{display:none}
-.drawer-header{display:flex;justify-content:space-between;align-items:center;padding-bottom:8px}
-.drawer-body{overflow:auto;flex:1;display:flex;flex-direction:column;gap:10px;padding-top:8px}
-
-/* modal */
-.modal{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,0.5);z-index:80}
-.modal.hidden{display:none}
-.modal-inner{width:100%;max-width:520px;padding:18px;border-radius:12px;background:linear-gradient(180deg,#101214,#121416);border:1px solid rgba(255,255,255,0.03)}
-.modal-inner input{width:100%;padding:10px;margin:8px 0;border-radius:8px;border:1px solid rgba(255,255,255,0.04);background:transparent;color:inherit}
-
-/* export button */
-#export-results-btn{padding:8px 12px;border-radius:8px}
-
-/* toast */
-.toast{position:fixed;left:50%;transform:translateX(-50%);bottom:24px;background:var(--card);padding:10px 14px;border-radius:999px;border:1px solid rgba(255,255,255,0.04);box-shadow:var(--shadow)}
-.toast.hidden{display:none}
-
-/* responsive */
-@media (max-width:880px){
-  .sidebar{position:fixed;left:0;top:64px;bottom:0;width:300px;z-index:70;transform:translateX(-110%);transition:transform .25s}
-  .sidebar.open{transform:translateX(0)}
-  .app-layout{padding-left:0}
-  .global-search{width:100%}
+/* Light theme overrides */
+body.light-mode {
+  background: #f9f9f9;
+  color: #111;
 }
+body.light-mode .sidebar { background:#fff; color:#111; }
+body.light-mode .feed-item { background:#f1f1f1; color:#111; }
+body.light-mode .article { background:#fff; color:#111; border:1px solid #ddd; }
+body.light-mode .article-body h4 { color:#0066cc; }
+body.light-mode .article:hover h4 { color:#004499; }
