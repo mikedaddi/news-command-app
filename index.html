@@ -26,7 +26,6 @@
           <div class="icon">🗞️</div>
           <div class="title">MY FEED</div>
         </div>
-
         <div class="right-head">
           <button id="bookmarks-btn" class="small-icon" title="Bookmarks">🔖</button>
         </div>
@@ -41,22 +40,16 @@
         <input id="feed-filter" placeholder="Search feeds..." />
       </div>
 
-      <nav id="feed-list" class="feed-list" aria-label="feeds">
-        <!-- feeds injected here -->
-      </nav>
-
-      <div class="sidebar-footer">
-        <small>Saved locally • Persistent</small>
-      </div>
+      <nav id="feed-list" class="feed-list"></nav>
+      <div class="sidebar-footer"><small>Saved locally • Persistent</small></div>
     </aside>
 
-    <!-- Main content -->
+    <!-- Main -->
     <main class="main">
       <section id="feed-meta" class="feed-meta">
         <h2 id="feed-name">Welcome</h2>
-        <p id="feed-sub">Choose a feed on the left or search the web above.</p>
+        <p id="feed-sub">Choose a feed on the left or search above.</p>
       </section>
-
       <section id="article-wrap" class="article-wrap">
         <div class="placeholder">Loading feeds...</div>
       </section>
@@ -81,11 +74,10 @@
     <div class="modal-card">
       <h3>How To</h3>
       <ul>
-        <li>Click a feed on the left to load its articles.</li>
-        <li>Use the top search to open DuckDuckGo results.</li>
-        <li>Click the share icon on an article to copy or tweet.</li>
-        <li>Click the bookmark icon to save to Bookmarks.</li>
-        <li>Open Bookmarks with the 🔖 icon at the sidebar header.</li>
+        <li>Click a feed to load its articles.</li>
+        <li>Search the web with DuckDuckGo above.</li>
+        <li>Share or bookmark any article.</li>
+        <li>Open Bookmarks with the 🔖 button.</li>
       </ul>
       <div class="modal-actions">
         <button id="howto-close" class="btn primary">Close</button>
@@ -100,14 +92,15 @@
         <h3>🔖 Bookmarks</h3>
         <button id="bookmarks-close" class="btn ghost">Close</button>
       </div>
-      <div id="bookmarks-list" class="bookmarks-list">
-        <!-- bookmarks injected -->
-      </div>
+      <div id="bookmarks-list" class="bookmarks-list"></div>
     </div>
   </div>
 
   <!-- Toast -->
   <div id="toast" class="toast hidden"></div>
+
+  <!-- Canvas Export (hidden) -->
+  <canvas id="share-canvas" class="hidden"></canvas>
 
   <script src="script.js" defer></script>
 </body>
