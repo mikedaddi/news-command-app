@@ -1,91 +1,54 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>News Command Center</title>
   <link rel="stylesheet" href="style.css" />
-  <!-- Optional: fontawesome for icons (used for delete icon). If offline, delete this line. -->
-  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body class="light-mode">
-  <div class="app-shell">
-    <header class="topbar">
-      <button id="sidebar-toggle" class="hamburger" aria-label="Toggle sidebar">☰</button>
-      <div class="topbar-title">News Command Center</div>
-      <div class="topbar-actions">
-        <button id="toggle-dark" class="icon-btn" title="Toggle theme">🌙</button>
+  <div class="app-container">
+    <!-- Sidebar -->
+    <aside class="sidebar-feeds" id="sidebar">
+      <header>
+        <h1>My Feeds</h1>
+        <button id="toggle-dark">🌙 Toggle Dark Mode</button>
+        <button id="add-feed-btn" class="add-btn">➕ Add Feed</button>
+      </header>
+      <div id="feed-list"></div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+      <!-- Search bar -->
+      <div class="search-bar">
+        <input type="text" id="search-input" placeholder="🔍 Search articles..." />
       </div>
-    </header>
 
-    <div class="app-container">
-      <!-- Sidebar -->
-      <aside class="sidebar-feeds" id="sidebar">
-        <div class="sidebar-header">
-          <h1>📡 My Feeds</h1>
-          <div class="sidebar-controls">
-            <button id="add-feed-btn" class="primary small">➕ Add Feed</button>
-            <button id="how-to-btn" class="small">❓ How To</button>
-          </div>
-        </div>
+      <!-- Article container -->
+      <div id="article-container">
+        <p>Loading...</p>
+      </div>
 
-        <div id="feed-list" class="feed-list">
-          <!-- feeds injected here -->
-        </div>
-
-        <footer class="sidebar-footer">
-          <small>Saved locally · Offline-ish</small>
-          <button id="reset-feeds-btn" class="small ghost">Reset Defaults</button>
-        </footer>
-      </aside>
-
-      <!-- Main -->
-      <main class="main-content">
-        <section id="article-container" class="article-grid">
-          <div class="placeholder">
-            <h2>Welcome</h2>
-            <p>Click a feed in the left sidebar to load articles, or press ➕ Add Feed to add an RSS/Atom URL.</p>
-          </div>
-        </section>
-
-        <aside class="bookmarks-panel">
-          <h3>🔖 Bookmarks</h3>
-          <div id="bookmarks" class="bookmarks-list">
-            <!-- saved articles appear here -->
-          </div>
-        </aside>
-      </main>
-    </div>
+      <!-- Bookmarked Articles -->
+      <section id="saved-articles">
+        <h2>🔖 Bookmarked Articles</h2>
+        <input type="text" id="bookmark-search" placeholder="Search bookmarks..." />
+        <div id="bookmarks"></div>
+      </section>
+    </main>
   </div>
 
   <!-- Add Feed Modal -->
-  <div id="add-feed-modal" class="modal hidden" role="dialog" aria-modal="true">
-    <div class="modal-box">
-      <h2>Add Feed</h2>
-      <label>Feed Name</label>
-      <input id="feed-name-input" type="text" placeholder="e.g. BBC World" />
-      <label>Feed URL (RSS/Atom)</label>
-      <input id="feed-url-input" type="url" placeholder="https://feeds.example.com/rss.xml" />
+  <div id="add-feed-modal" class="modal hidden">
+    <div class="modal-content">
+      <h2>Add New Feed</h2>
+      <input type="text" id="feed-name-input" placeholder="Feed Name" />
+      <input type="text" id="feed-url-input" placeholder="Feed URL" />
       <div class="modal-actions">
-        <button id="save-feed-btn" class="primary">Save</button>
+        <button id="save-feed-btn">Save</button>
         <button id="cancel-feed-btn">Cancel</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- How To Modal -->
-  <div id="how-to-modal" class="modal hidden" role="dialog" aria-modal="true">
-    <div class="modal-box">
-      <h2>How to use News Command Center</h2>
-      <ul>
-        <li>Click a feed in the sidebar to load the latest items.</li>
-        <li>Use <b>➕ Add Feed</b> to add any RSS/Atom feed URL.</li>
-        <li>Click the ❌ icon next to a custom feed to remove it.</li>
-        <li>Use the theme button (top-right) to toggle dark mode.</li>
-        <li>Bookmarks are saved locally in your browser.</li>
-      </ul>
-      <div class="modal-actions">
-        <button id="close-how-to-btn">Close</button>
       </div>
     </div>
   </div>
