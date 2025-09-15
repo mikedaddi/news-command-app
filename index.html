@@ -1,95 +1,70 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>News Command Center</title>
-  <link rel="stylesheet" href="style.css" />
-  <!-- Optional: fontawesome for icons (used for delete icon). If offline, delete this line. -->
-  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Command Center</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 </head>
-<body class="light-mode">
-  <div class="app-shell">
-    <header class="topbar">
-      <button id="sidebar-toggle" class="hamburger" aria-label="Toggle sidebar">☰</button>
-      <div class="topbar-title">News Command Center</div>
-      <div class="topbar-actions">
-        <button id="toggle-dark" class="icon-btn" title="Toggle theme">🌙</button>
-      </div>
-    </header>
-
+<body>
     <div class="app-container">
-      <!-- Sidebar -->
-      <aside class="sidebar-feeds" id="sidebar">
-        <div class="sidebar-header">
-          <h1>📡 My Feeds</h1>
-          <div class="sidebar-controls">
-            <button id="add-feed-btn" class="primary small">➕ Add Feed</button>
-            <button id="how-to-btn" class="small">❓ How To</button>
-          </div>
-        </div>
+        <!-- Far-Left Sidebar for Navigation -->
+        <nav class="sidebar-nav">
+            <div class="logo">CC</div>
+            <a href="#" class="nav-item active" title="Home"><i class="fas fa-home"></i></a>
+            <a href="#" id="how-to-btn" class="nav-item" title="How-To Guide"><i class="fas fa-question-circle"></i></a>
+            <!-- NEW: The Dark Mode Toggle -->
+            <div id="theme-toggle" class="nav-item" title="Toggle Theme">
+                <i class="fas fa-moon"></i>
+            </div>
+        </nav>
 
-        <div id="feed-list" class="feed-list">
-          <!-- feeds injected here -->
-        </div>
-
-        <footer class="sidebar-footer">
-          <small>Saved locally · Offline-ish</small>
-          <button id="reset-feeds-btn" class="small ghost">Reset Defaults</button>
-        </footer>
-      </aside>
-
-      <!-- Main -->
-      <main class="main-content">
-        <section id="article-container" class="article-grid">
-          <div class="placeholder">
-            <h2>Welcome</h2>
-            <p>Click a feed in the left sidebar to load articles, or press ➕ Add Feed to add an RSS/Atom URL.</p>
-          </div>
-        </section>
-
-        <aside class="bookmarks-panel">
-          <h3>🔖 Bookmarks</h3>
-          <div id="bookmarks" class="bookmarks-list">
-            <!-- saved articles appear here -->
-          </div>
+        <!-- Second Column for Feeds/Sources -->
+        <aside class="sidebar-feeds">
+            <header>
+                <h1>My Feeds</h1>
+                <button id="add-feed-btn" class="add-feed-btn">+</button>
+            </header>
+            <!-- NEW: The Feed Filter Search Box -->
+            <div class="feed-search-container">
+                <input type="text" id="feed-filter-input" placeholder="Filter feeds...">
+            </div>
+            <div id="feed-list">
+                <!-- User's RSS feeds will be added here -->
+            </div>
         </aside>
-      </main>
-    </div>
-  </div>
 
-  <!-- Add Feed Modal -->
-  <div id="add-feed-modal" class="modal hidden" role="dialog" aria-modal="true">
-    <div class="modal-box">
-      <h2>Add Feed</h2>
-      <label>Feed Name</label>
-      <input id="feed-name-input" type="text" placeholder="e.g. BBC World" />
-      <label>Feed URL (RSS/Atom)</label>
-      <input id="feed-url-input" type="url" placeholder="https://feeds.example.com/rss.xml" />
-      <div class="modal-actions">
-        <button id="save-feed-btn" class="primary">Save</button>
-        <button id="cancel-feed-btn">Cancel</button>
-      </div>
+        <!-- Main Column for Articles -->
+        <main class="main-content">
+            <div id="article-container">
+                <div class="loading-spinner"></div>
+            </div>
+        </main>
     </div>
-  </div>
 
-  <!-- How To Modal -->
-  <div id="how-to-modal" class="modal hidden" role="dialog" aria-modal="true">
-    <div class="modal-box">
-      <h2>How to use News Command Center</h2>
-      <ul>
-        <li>Click a feed in the sidebar to load the latest items.</li>
-        <li>Use <b>➕ Add Feed</b> to add any RSS/Atom feed URL.</li>
-        <li>Click the ❌ icon next to a custom feed to remove it.</li>
-        <li>Use the theme button (top-right) to toggle dark mode.</li>
-        <li>Bookmarks are saved locally in your browser.</li>
-      </ul>
-      <div class="modal-actions">
-        <button id="close-how-to-btn">Close</button>
-      </div>
+    <!-- Modals are the same as before -->
+    <div id="add-feed-modal" class="modal-overlay hidden">
+        <div class="modal-content">
+            <h2>Add a New Feed</h2>
+            <input type="text" id="feed-name-input" placeholder="Feed Name (e.g., BBC Science)">
+            <input type="url" id="feed-url-input" placeholder="RSS Feed URL">
+            <div class="modal-buttons">
+                <button id="save-feed-btn">Add Feed</button>
+                <button id="cancel-feed-btn">Cancel</button>
+            </div>
+        </div>
     </div>
-  </div>
+    <div id="how-to-modal" class="modal-overlay hidden">
+        <div class="modal-content">
+            <h2>How to Use The Command Center</h2>
+            <p><strong>1. Find an RSS Feed:</strong> The easiest way is to search Google for "[Website Name] RSS Feed".</p>
+            <p><strong>2. Add the Feed:</strong> Click the `+` button in the "My Feeds" panel. Paste the Feed Name and the full RSS URL.</p>
+            <p><strong>3. View Your News:</strong> Simply click on any feed in your list to load the latest articles. Your feeds are saved in your browser.</p>
+            <button id="close-how-to-btn">Got It</button>
+        </div>
+    </div>
 
-  <script src="script.js"></script>
+    <script src="script.js"></script>
 </body>
 </html>
