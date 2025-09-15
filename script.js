@@ -1,114 +1,165 @@
+// --- DOM READY ---
 document.addEventListener('DOMContentLoaded', () => {
-  const CORS = 'https://api.allorigins.win/raw?url=';
-  const FEEDS_KEY = 'ncc_feeds_v2';
-  const THEME_KEY = 'ncc_theme_v2';
+  const feedListContainer = document.getElementById('feed-list');
+  const articleContainer = document.getElementById('article-container');
+  const addFeedBtn = document.getElementById('add-feed-btn');
+  const addFeedModal = document.getElementById('add-feed-modal');
+  const saveFeedBtn = document.getElementById('save-feed-btn');
+  const cancelFeedBtn = document.getElementById('cancel-feed-btn');
+  const howToBtn = document.getElementById('how-to-btn');
+  const howToModal = document.getElementById('how-to-modal');
+  const closeHowToBtn = document.getElementById('close-how-to-btn');
+  const searchInput = document.getElementById('search-input');
+  const searchBtn = document.getElementById('search-btn');
 
-  // Defaults now include ABC, Fox, TMZ
-  const DEFAULT_FEEDS = [
-    { name: "BBC World News", url: "https://feeds.bbci.co.uk/news/world/rss.xml" },
-    { name: "Variety", url: "https://variety.com/feed/" },
-    { name: "TechCrunch", url: "https://techcrunch.com/feed/" },
-    { name: "ABC News", url: "https://abcnews.go.com/abcnews/topstories" },
-    { name: "Fox News Live", url: "https://moxie.foxnews.com/google-publisher/latest.xml" },
-    { name: "TMZ Entertainment", url: "https://www.tmz.com/rss.xml" }
-  ];
-
-  const el = id => document.getElementById(id);
-  const globalSearch = el('global-search');
-  const searchBtn = el('search-btn');
-  const googleToggle = el('google-toggle');
-  const toggleDark = el('toggle-dark');
-  const articleGrid = el('article-grid');
-  const heroTitle = el('hero-title');
-  const heroSub = el('hero-sub');
-  const feedList = el('feed-list');
-
+  const CORS_PROXY_URL = 'https://api.allorigins.win/raw?url=';
   let feeds = [];
-  let useGoogle = false;
 
-  // Load state
-  function loadFeeds(){
-    const saved = JSON.parse(localStorage.getItem(FEEDS_KEY) || "null");
-    feeds = saved && saved.length ? saved : DEFAULT_FEEDS.slice();
+  // --- FETCH FEED ---
+  async function fetchAndDisplayFeed(feedUrl, feedElement) {
+    articleContainer.innerHTML = '<div class="loading-spinner"></div>';
+    document.querySelectorAll('.feed-item').forEach(item => item.classList.remove('active-feed'));
+    if (feedElement) feedElement.classList.add('active-feed');
+
+    try {
+      const response = await fetch(`${CORS_PROXY_URL}${encodeURIComponent(feedUrl)}`);
+      if (!response.ok) throw new Error(`Status: ${response.status}`);
+      const str = await response.text();
+      const data = new window.DOMParser().parseFromString(str, "text/xml");
+
+      articleContainer.innerHTML = '';
+      const items = data.querySelectorAll("item");
+
+      if (items.length === 0) {
+        articleContainer.innerHTML = `<p style="text-align: center;">This feed is empty or invalid.</p>`;
+        return;
+      }
+
+      items.forEach(item => {
+        const title = item.querySelector("title")?.textContent || 'No Title';
+        const link = item.querySelector("link")?.textContent || '#';
+        const description = (item.querySelector("description")?.textContent || '')
+          .replace(/<[^>]*>?/gm, "")
+          .substring(0, 200);
+        const pubDate = item.querySelector("pubDate")?.textContent
+          ? new Date(item.querySelector("pubDate").textContent).toLocaleDateString()
+          : 'No Date';
+
+        const articleCard = `
+          <a href="${link}" target="_blank" rel="noopener noreferrer" class="article-card">
+            <div class="article-content">
+              <h2>${title}</h2>
+              <p>${description}...</p>
+              <div class="article-meta"><span>${pubDate}</span></div>
+            </div>
+          </a>
+        `;
+        articleContainer.insertAdjacentHTML('beforeend', articleCard);
+      });
+    } catch (error) {
+      console.error('Fetch Error:', error);
+      articleContainer.innerHTML = `<p style="color: var(--accent-red); text-align:center;">Failed to load feed. Error: ${error.message}</p>`;
+    }
   }
-  function saveFeeds(){ localStorage.setItem(FEEDS_KEY, JSON.stringify(feeds)); }
 
-  function renderFeeds(){
-    feedList.innerHTML = '';
-    feeds.forEach((f,i) => {
-      const div = document.createElement('div');
-      div.className = 'feed-item';
-      div.textContent = f.name;
-      div.onclick = () => loadFeedAt(i);
-      feedList.appendChild(div);
+  // --- SAVE FEEDS ---
+  function saveFeeds() {
+    localStorage.setItem('commandCenterFeeds', JSON.stringify(feeds));
+  }
+
+  function loadFeeds() {
+    const savedFeeds = localStorage.getItem('commandCenterFeeds');
+    if (savedFeeds && JSON.parse(savedFeeds).length > 0) {
+      feeds = JSON.parse(savedFeeds);
+    } else {
+      feeds = [
+        { name: "BBC World News", url: "http://feeds.bbci.co.uk/news/world/rss.xml" },
+        { name: "ABC News (US)", url: "https://abcnews.go.com/abcnews/topstories" },
+        { name: "Fox News", url: "https://feeds.foxnews.com/foxnews/latest" },
+        { name: "TMZ Entertainment", url: "https://www.tmz.com/rss.xml" },
+        { name: "Variety", url: "https://variety.com/feed/" },
+        { name: "TechCrunch", url: "https://techcrunch.com/feed/" }
+      ];
+      saveFeeds();
+    }
+  }
+
+  function renderFeedList() {
+    feedListContainer.innerHTML = '';
+    feeds.forEach((feed, index) => {
+      const feedItemHTML = `
+        <div class="feed-item" data-url="${feed.url}" data-index="${index}">
+          <span>${feed.name}</span>
+          <i class="fas fa-times-circle delete-feed-btn"></i>
+        </div>
+      `;
+      feedListContainer.insertAdjacentHTML('beforeend', feedItemHTML);
     });
   }
 
-  // Dark / Light toggle
-  function applyTheme(){
-    const theme = localStorage.getItem(THEME_KEY) || 'dark';
-    document.body.classList.remove('dark-mode','light-mode');
-    document.body.classList.add(theme === 'light' ? 'light-mode' : 'dark-mode');
-  }
-  toggleDark.onclick = () => {
-    const current = localStorage.getItem(THEME_KEY) || 'dark';
-    const next = current === 'dark' ? 'light' : 'dark';
-    localStorage.setItem(THEME_KEY,next);
-    applyTheme();
-  };
+  // --- EVENT LISTENERS ---
+  addFeedBtn.addEventListener('click', () => addFeedModal.classList.remove('hidden'));
+  cancelFeedBtn.addEventListener('click', () => addFeedModal.classList.add('hidden'));
+  howToBtn.addEventListener('click', () => howToModal.classList.remove('hidden'));
+  closeHowToBtn.addEventListener('click', () => howToModal.classList.add('hidden'));
 
-  // Google toggle
-  googleToggle.onclick = () => {
-    useGoogle = !useGoogle;
-    googleToggle.textContent = useGoogle ? "📰" : "🌐"; // flip icons
-    heroSub.textContent = useGoogle ? "Google search mode" : "Feed search mode";
-  };
-
-  // Search
-  searchBtn.onclick = () => {
-    const q = globalSearch.value.trim();
-    if(!q) return;
-    if(useGoogle){
-      window.open(`https://www.google.com/search?q=${encodeURIComponent(q)}`,'_blank');
+  saveFeedBtn.addEventListener('click', () => {
+    const feedNameInput = document.getElementById('feed-name-input');
+    const feedUrlInput = document.getElementById('feed-url-input');
+    const name = feedNameInput.value.trim();
+    const url = feedUrlInput.value.trim();
+    if (name && url) {
+      feeds.push({ name, url });
+      saveFeeds();
+      renderFeedList();
+      feedNameInput.value = '';
+      feedUrlInput.value = '';
+      addFeedModal.classList.add('hidden');
     } else {
-      heroTitle.textContent = "Search Results";
-      heroSub.textContent = `Query: "${q}" across feeds`;
-      articleGrid.innerHTML = `<div class="placeholder">Searching feeds...</div>`;
-      // (keep your existing feed search logic here)
+      alert('Please provide both a name and a valid URL.');
     }
-  };
+  });
 
-  // Load one feed
-  async function loadFeedAt(i){
-    const f = feeds[i];
-    if(!f) return;
-    heroTitle.textContent = f.name;
-    heroSub.textContent = f.url;
-    articleGrid.innerHTML = `<div class="placeholder">Loading...</div>`;
-    try {
-      const res = await fetch(CORS+encodeURIComponent(f.url));
-      const txt = await res.text();
-      const xml = new DOMParser().parseFromString(txt,"application/xml");
-      const items = xml.querySelectorAll("item");
-      articleGrid.innerHTML = '';
-      items.forEach(it => {
-        const title = it.querySelector("title")?.textContent || 'No title';
-        const link = it.querySelector("link")?.textContent || '#';
-        const desc = it.querySelector("description")?.textContent || '';
-        const a = document.createElement('a');
-        a.className='article';
-        a.href=link; a.target="_blank";
-        a.innerHTML = `<div class="article-body"><h4>${title}</h4><p>${desc.substring(0,100)}</p></div>`;
-        articleGrid.appendChild(a);
-      });
-    } catch(err){
-      articleGrid.innerHTML = `<div class="placeholder">Error loading feed</div>`;
+  feedListContainer.addEventListener('click', (event) => {
+    const target = event.target;
+    const feedElement = target.closest('.feed-item');
+
+    if (target.matches('.delete-feed-btn')) {
+      event.stopPropagation();
+      const indexToDelete = parseInt(feedElement.dataset.index, 10);
+      feeds.splice(indexToDelete, 1);
+      saveFeeds();
+      renderFeedList();
+      initializeApp(true);
+    } else if (feedElement) {
+      const feedUrl = feedElement.dataset.url;
+      fetchAndDisplayFeed(feedUrl, feedElement);
+    }
+  });
+
+  // --- SEARCH ---
+  searchBtn.addEventListener('click', () => {
+    const query = searchInput.value.trim();
+    if (!query) return;
+
+    const duckUrl = `https://duckduckgo.com/?q=${encodeURIComponent(query)}`;
+    window.open(duckUrl, '_blank');
+  });
+
+  // --- INITIALIZATION ---
+  function initializeApp(isReload = false) {
+    if (!isReload) {
+      loadFeeds();
+    }
+    renderFeedList();
+    const firstFeed = document.querySelector('.feed-item');
+    if (firstFeed) {
+      const firstFeedUrl = firstFeed.dataset.url;
+      fetchAndDisplayFeed(firstFeedUrl, firstFeed);
+    } else {
+      articleContainer.innerHTML = '<p style="text-align:center;">Click "+" to add a feed.</p>';
     }
   }
 
-  // Init
-  loadFeeds();
-  renderFeeds();
-  applyTheme();
-  if(feeds[0]) loadFeedAt(0);
+  initializeApp();
 });
