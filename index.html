@@ -3,68 +3,47 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>The Command Center</title>
+    <title>News Command Center</title>
     <link rel="stylesheet" href="style.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" rel="stylesheet">
 </head>
 <body>
     <div class="app-container">
-        <!-- Far-Left Sidebar for Navigation -->
-        <nav class="sidebar-nav">
-            <div class="logo">CC</div>
-            <a href="#" class="nav-item active" title="Home"><i class="fas fa-home"></i></a>
-            <a href="#" id="how-to-btn" class="nav-item" title="How-To Guide"><i class="fas fa-question-circle"></i></a>
-            <!-- NEW: The Dark Mode Toggle -->
-            <div id="theme-toggle" class="nav-item" title="Toggle Theme">
-                <i class="fas fa-moon"></i>
-            </div>
-        </nav>
-
-        <!-- Second Column for Feeds/Sources -->
+        <!-- Sidebar for Feeds/Sources -->
         <aside class="sidebar-feeds">
             <header>
                 <h1>My Feeds</h1>
-                <button id="add-feed-btn" class="add-feed-btn">+</button>
             </header>
-            <!-- NEW: The Feed Filter Search Box -->
-            <div class="feed-search-container">
-                <input type="text" id="feed-filter-input" placeholder="Filter feeds...">
-            </div>
             <div id="feed-list">
-                <!-- User's RSS feeds will be added here -->
+                <a href="#" class="feed-item active-feed" data-target="bbc-articles">BBC World News</a>
+                <a href="#" class="feed-item" data-target="variety-articles">Variety</a>
+                <a href="#" class="feed-item" data-target="tech-articles">TechCrunch</a>
             </div>
         </aside>
 
         <!-- Main Column for Articles -->
         <main class="main-content">
+            <h1 class="main-title">News Command Center</h1>
             <div id="article-container">
-                <div class="loading-spinner"></div>
+                <!-- BBC News Articles (Visible by default) -->
+                <div id="bbc-articles" class="feed-content active">
+                    <div class="article-card"><h2>Global Summit Addresses Climate Change</h2><p>Leaders from around the world gather to discuss new initiatives and commitments to combat the growing climate crisis. Tensions are high as nations debate the path forward...</p></div>
+                    <div class="article-card"><h2>Breakthrough in AI Research Announced</h2><p>A new artificial intelligence model has demonstrated unprecedented problem-solving abilities, sparking both excitement and ethical debates among top researchers...</p></div>
+                </div>
+
+                <!-- Variety Articles (Hidden by default) -->
+                <div id="variety-articles" class="feed-content">
+                    <div class="article-card"><h2>Summer Blockbuster Shatters Box Office Records</h2><p>The latest superhero epic has defied all expectations, bringing in a record number of viewers in its opening weekend and setting a new benchmark for the industry...</p></div>
+                </div>
+
+                <!-- TechCrunch Articles (Hidden by default) -->
+                <div id="tech-articles" class="feed-content">
+                    <div class="article-card"><h2>New Startup Aims to Revolutionize Social Media</h2><p>A stealth startup from Silicon Valley has just launched a new platform that promises a more authentic and private social experience, challenging the current giants...</p></div>
+                    <div class="article-card"><h2>The Future of Quantum Computing is Here</h2><p>Scientists have achieved a major milestone in quantum computing, potentially unlocking processing power that was once thought to be theoretical...</p></div>
+                </div>
             </div>
         </main>
     </div>
-
-    <!-- Modals are the same as before -->
-    <div id="add-feed-modal" class="modal-overlay hidden">
-        <div class="modal-content">
-            <h2>Add a New Feed</h2>
-            <input type="text" id="feed-name-input" placeholder="Feed Name (e.g., BBC Science)">
-            <input type="url" id="feed-url-input" placeholder="RSS Feed URL">
-            <div class="modal-buttons">
-                <button id="save-feed-btn">Add Feed</button>
-                <button id="cancel-feed-btn">Cancel</button>
-            </div>
-        </div>
-    </div>
-    <div id="how-to-modal" class="modal-overlay hidden">
-        <div class="modal-content">
-            <h2>How to Use The Command Center</h2>
-            <p><strong>1. Find an RSS Feed:</strong> The easiest way is to search Google for "[Website Name] RSS Feed".</p>
-            <p><strong>2. Add the Feed:</strong> Click the `+` button in the "My Feeds" panel. Paste the Feed Name and the full RSS URL.</p>
-            <p><strong>3. View Your News:</strong> Simply click on any feed in your list to load the latest articles. Your feeds are saved in your browser.</p>
-            <button id="close-how-to-btn">Got It</button>
-        </div>
-    </div>
-
     <script src="script.js"></script>
 </body>
 </html>
