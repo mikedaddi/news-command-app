@@ -1,88 +1,71 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>News Command Center</title>
   <link rel="stylesheet" href="style.css" />
-  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
 </head>
-<body>
-  <!-- Top bar -->
-  <header class="topbar">
-    <div class="topbar-left">
-      <button id="sidebar-toggle" class="icon-btn">☰</button>
-      <div class="brand">News Command Center</div>
-    </div>
-
-    <div class="topbar-center">
-      <input id="global-search" class="global-search" type="search" placeholder="Search all feeds or Google..." />
-      <button id="search-btn" class="icon-btn"><i class="fas fa-search"></i></button>
-      <button id="google-toggle" class="icon-btn" title="Toggle Google Search">🌐</button>
-    </div>
-
-    <div class="topbar-right">
-      <button id="toggle-dark" class="icon-btn" title="Toggle theme">🌙</button>
-      <button id="bookmarks-btn" class="icon-btn"><i class="fas fa-bookmark"></i></button>
-    </div>
-  </header>
-
-  <div class="app-layout">
+<body class="dark-mode">
+  <div class="app-container">
     <!-- Sidebar -->
-    <aside id="sidebar" class="sidebar">
-      <div class="sidebar-header">
-        <h2>My Feeds</h2>
+    <aside class="sidebar-feeds">
+      <header>
+        <h1>📰 News Command</h1>
         <div class="sidebar-actions">
-          <button id="add-feed-btn" class="small primary">➕ Add Feed</button>
-          <button id="reset-feeds-btn" class="small ghost">Reset</button>
+          <button id="add-feed-btn">➕ Add Feed</button>
+          <button id="how-to-btn">❓ How To</button>
         </div>
-        <input id="feed-filter" class="feed-filter" placeholder="Filter feeds..." />
-      </div>
-
-      <nav id="feed-list" class="feed-list"></nav>
+        <div class="search-bar">
+          <input type="text" id="search-input" placeholder="Search news or web..." />
+          <button id="search-btn"><i class="fas fa-search"></i></button>
+        </div>
+      </header>
+      <div id="feed-list"></div>
     </aside>
 
-    <!-- Main content -->
-    <main id="main" class="main">
-      <section id="main-hero" class="hero">
-        <div>
-          <h3 id="hero-title">Browse</h3>
-          <p id="hero-sub">Select a feed from the left — or search across all feeds / Google.</p>
-        </div>
-        <div>
-          <button id="export-results-btn" class="small ghost hidden">📤 Export Results</button>
-        </div>
-      </section>
+    <!-- Main Content -->
+    <main class="main-content">
+      <div id="article-container">
+        <p>Loading feeds...</p>
+      </div>
 
-      <section id="article-grid" class="article-grid">
-        <div class="placeholder">Loading...</div>
+      <!-- Saved Articles -->
+      <section id="saved-articles">
+        <h2>🔖 Bookmarked Articles</h2>
+        <div id="bookmarks"></div>
       </section>
     </main>
   </div>
 
-  <!-- Bookmarks Drawer -->
-  <aside id="bookmarks-drawer" class="drawer hidden">
-    <header class="drawer-header">
-      <h3>🔖 Bookmarks</h3>
-      <button id="close-bookmarks" class="icon-btn">✕</button>
-    </header>
-    <div id="bookmarks-list" class="drawer-body"></div>
-  </aside>
-
   <!-- Add Feed Modal -->
   <div id="add-feed-modal" class="modal hidden">
-    <div class="modal-inner">
-      <h3>Add Feed</h3>
-      <input id="feed-name-input" placeholder="Friendly name (optional)" />
-      <input id="feed-url-input" placeholder="Feed URL (https://example.com/rss)" />
+    <div class="modal-content">
+      <h2>Add New Feed</h2>
+      <input type="text" id="feed-name-input" placeholder="Feed Name" />
+      <input type="text" id="feed-url-input" placeholder="Feed URL" />
       <div class="modal-actions">
-        <button id="save-feed-btn" class="primary">Save</button>
-        <button id="cancel-feed-btn" class="ghost">Cancel</button>
+        <button id="save-feed-btn">Save</button>
+        <button id="cancel-feed-btn">Cancel</button>
       </div>
     </div>
   </div>
 
-  <div id="toast" class="toast hidden"></div>
-  <script src="script.js" defer></script>
+  <!-- How To Modal -->
+  <div id="how-to-modal" class="modal hidden">
+    <div class="modal-content">
+      <h2>How To Use</h2>
+      <p>➕ Add feeds by clicking "Add Feed"</p>
+      <p>🗑 Remove feeds by clicking the ❌ icon</p>
+      <p>🔖 Save articles to bookmarks</p>
+      <p>🔍 Use search to look inside feeds or across the web</p>
+      <div class="modal-actions">
+        <button id="close-how-to-btn">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
 </body>
 </html>
