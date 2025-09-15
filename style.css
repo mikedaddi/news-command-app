@@ -1,60 +1,201 @@
-/* Reset + Base */
-* { box-sizing: border-box; margin: 0; padding: 0; }
-html, body { height: 100%; }
+/* --- GLOBALS --- */
+:root {
+  --bg-dark: #121212;
+  --sidebar-dark: #1e1e1e;
+  --card-dark: #2a2a2a;
+  --accent-blue: #00bfff;
+  --accent-red: #ff4c4c;
+  --text-light: #e0e0e0;
+}
+
 body {
-  font-family: 'Segoe UI', Arial, sans-serif;
-  background: #121212;
-  color: #e0e0e0;
-  display: flex;
-  flex-direction: column;
-  transition: background .3s, color .3s;
+  margin: 0;
+  font-family: 'Segoe UI', sans-serif;
+  background-color: var(--bg-dark);
+  color: var(--text-light);
 }
 
-/* ============ Topbar ============ */
-.topbar {
+/* --- LAYOUT --- */
+.app-container {
   display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: .5rem 1rem;
-  background: #1e1e1e;
-  border-bottom: 1px solid #333;
-}
-.topbar-left, .topbar-center, .topbar-right {
-  display: flex;
-  align-items: center;
-  gap: .5rem;
-}
-.brand { font-weight: bold; font-size: 1.2rem; }
-.icon-btn {
-  background: none;
-  border: none;
-  cursor: pointer;
-  font-size: 1.2rem;
-  color: inherit;
-  transition: color .2s;
-}
-.icon-btn:hover { color: #4da8ff; }
-.global-search {
-  padding: .4rem .6rem;
-  border-radius: 4px;
-  border: 1px solid #444;
-  background: #222;
-  color: #eee;
-  min-width: 200px;
-}
-.global-search:focus { outline: 2px solid #4da8ff; }
-
-/* ============ Layout ============ */
-.app-layout {
-  display: flex;
-  flex: 1;
-  min-height: 0;
+  min-height: 100vh;
 }
 
-/* Sidebar */
-.sidebar {
+/* --- SIDEBAR --- */
+.sidebar-feeds {
   width: 260px;
-  background: #1a1a1a;
+  background-color: var(--sidebar-dark);
+  padding: 1rem;
   border-right: 1px solid #333;
   display: flex;
-  flex-direction: colum
+  flex-direction: column;
+}
+
+.sidebar-feeds h1 {
+  margin: 0 0 1rem 0;
+  font-size: 1.6rem;
+}
+
+.sidebar-actions {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.sidebar-actions button {
+  flex: 1;
+  background: #333;
+  color: var(--text-light);
+  border: none;
+  border-radius: 4px;
+  padding: 0.5rem;
+  cursor: pointer;
+}
+
+.sidebar-actions button:hover {
+  background: #444;
+}
+
+.search-bar {
+  display: flex;
+  margin-bottom: 1rem;
+}
+
+.search-bar input {
+  flex: 1;
+  padding: 0.5rem;
+  border-radius: 4px 0 0 4px;
+  border: 1px solid #333;
+  background: #222;
+  color: var(--text-light);
+}
+
+.search-bar button {
+  padding: 0.5rem;
+  border-radius: 0 4px 4px 0;
+  border: 1px solid #333;
+  background: var(--accent-blue);
+  color: #fff;
+  cursor: pointer;
+}
+
+/* --- FEEDS --- */
+.feed-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.6rem;
+  border-radius: 4px;
+  cursor: pointer;
+  margin-bottom: 0.5rem;
+  color: var(--text-light);
+  transition: background 0.3s;
+}
+
+.feed-item:hover,
+.active-feed {
+  background-color: #333;
+}
+
+.feed-item i {
+  color: var(--accent-red);
+  cursor: pointer;
+}
+
+/* --- MAIN CONTENT --- */
+.main-content {
+  flex: 1;
+  padding: 2rem;
+  background: var(--bg-dark);
+}
+
+.article-card {
+  display: block;
+  background: var(--card-dark);
+  border: 1px solid #444;
+  border-radius: 6px;
+  padding: 1rem;
+  margin-bottom: 1.5rem;
+  text-decoration: none;
+  color: var(--text-light);
+  transition: transform 0.2s;
+}
+
+.article-card:hover {
+  transform: translateY(-2px);
+}
+
+.article-card h2 {
+  margin: 0 0 0.5rem;
+  color: var(--accent-blue);
+}
+
+.article-card p {
+  margin: 0 0 0.5rem;
+}
+
+.article-meta {
+  font-size: 0.8rem;
+  color: #aaa;
+}
+
+/* --- BOOKMARKS --- */
+#saved-articles {
+  margin-top: 2rem;
+  border-top: 2px solid #333;
+  padding-top: 1rem;
+}
+
+#bookmarks .article-card {
+  background: #3a2a00;
+}
+
+/* --- MODALS --- */
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0,0,0,0.7);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.modal.hidden {
+  display: none;
+}
+
+.modal-content {
+  background: var(--card-dark);
+  padding: 1.5rem;
+  border-radius: 6px;
+  max-width: 400px;
+  text-align: center;
+}
+
+.modal-content input {
+  width: 90%;
+  padding: 0.5rem;
+  margin: 0.5rem 0;
+  border: 1px solid #333;
+  background: #222;
+  color: var(--text-light);
+}
+
+.modal-actions {
+  margin-top: 1rem;
+  display: flex;
+  gap: 0.5rem;
+}
+
+.modal-actions button {
+  flex: 1;
+  padding: 0.5rem;
+  background: var(--accent-blue);
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
