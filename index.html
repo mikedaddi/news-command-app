@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>News Command Center — Command View</title>
+  <title>News Command Center — Share & Export</title>
   <link rel="stylesheet" href="style.css" />
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
 </head>
@@ -50,8 +50,13 @@
     <!-- Main content -->
     <main id="main" class="main">
       <section id="main-hero" class="hero">
-        <h3 id="hero-title">Browse</h3>
-        <p id="hero-sub">Select a feed from the left — or search across all feeds.</p>
+        <div>
+          <h3 id="hero-title">Browse</h3>
+          <p id="hero-sub">Select a feed from the left — or search across all feeds.</p>
+        </div>
+        <div>
+          <button id="export-results-btn" class="small ghost hidden">📤 Export Results</button>
+        </div>
       </section>
 
       <section id="article-grid" class="article-grid">
