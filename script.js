@@ -24,9 +24,9 @@ document.addEventListener('DOMContentLoaded', () => {
     { name: "TMZ Entertainment", url: "https://www.tmz.com/rss.xml" },
     { name: "TechCrunch", url: "https://techcrunch.com/feed/" },
     { name: "Wired Tech", url: "https://www.wired.com/feed/rss" },
-    { name: "NOAA Weather News", url: "https://www.weather.gov/news.rss" },
+    { name: "AccuWeather News", url: "https://rss.accuweather.com/rss/top-stories" },
     { name: "The Hollywood Reporter", url: "https://www.hollywoodreporter.com/c/news/feed" },
-    { name: "E! Online Entertainment", url: "https://www.eonline.com/syndication/feeds/rssfeeds/topstories.xml" }
+    { name: "ET Online Entertainment", url: "https://www.etonline.com/news/rss" }
   ];
 
   let feeds = [];
