@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<rss version="2.0">
+  <channel>
+    <title>Deeno Command Center Feed</title>
+    <link>https://mikedaddi.github.io/news-command-app/</link>
+    <description>Custom updates and special reports from Deeno Command Center</description>
+    <language>en-us</language>
+    <lastBuildDate>Tue, 16 Sep 2025 15:00:00 GMT</lastBuildDate>
+
+    <item>
+      <title>🚀 Welcome to Your Custom Command Feed</title>
+      <link>https://mikedaddi.github.io/news-command-app/</link>
+      <description>This is your first custom article coming straight from your own RSS feed!</description>
+      <pubDate>Tue, 16 Sep 2025 14:00:00 GMT</pubDate>
+    </item>
+
+    <item>
+      <title>🔥 Client Spotlight: Acme Corp Signs Major Deal</title>
+      <link>https://example.com/client-update</link>
+      <description>Acme Corp has signed a multi-million dollar deal — submitted directly into your feed.</description>
+      <pubDate>Tue, 16 Sep 2025 13:30:00 GMT</pubDate>
+    </item>
+
+    <item>
+      <title>⚡ Strategy Update: New Features Coming</title>
+      <link>https://example.com/strategy-update</link>
+      <description>We are preparing phase two: interactive forms + database-driven feeds. Stay tuned.</description>
+      <pubDate>Tue, 16 Sep 2025 12:00:00 GMT</pubDate>
+    </item>
+  </channel>
+</rss>
