@@ -1,107 +1,84 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>News Command Center</title>
-  <link rel="stylesheet" href="style.css" />
-  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <script src="https://kit.fontawesome.com/a2e0e6ad63.js" crossorigin="anonymous"></script>
 </head>
-<body class="dark-mode">
-  <div class="top-header">
-    <div class="title-wrap">
-      <h1 class="app-title">News Command Center</h1>
-      <div class="center-search">
-        <input id="top-search" placeholder="DuckDuckGo Search — press Enter or click 🔍" />
-        <button id="top-search-btn" title="Search (DuckDuckGo)">🔎</button>
-      </div>
+<body>
+  <header class="topbar">
+    <img src="logo.png" alt="App Logo" class="app-logo">
+    <h1>News Command Center</h1>
+    <div class="search-bar">
+      <input id="top-search" type="text" placeholder="DuckDuckGo Search — press Enter or click 🔍">
+      <button id="top-search-btn"><i class="fas fa-search"></i></button>
     </div>
-  </div>
+  </header>
 
-  <div class="app-shell">
+  <div class="container">
     <!-- Sidebar -->
     <aside class="sidebar">
-      <div class="sidebar-head">
-        <div class="left-head">
-          <div class="icon">🗞️</div>
-          <div class="title">MY FEED</div>
-        </div>
-        <div class="right-head">
-          <button id="bookmarks-btn" class="small-icon" title="Bookmarks">🔖</button>
-        </div>
+      <div class="sidebar-header">
+        <h2><i class="fas fa-newspaper"></i> MY FEED</h2>
+        <button id="reset-btn" class="reset-btn">RESET</button>
+        <button id="bookmarks-btn" class="bookmark-toggle"><i class="fas fa-bookmark"></i></button>
       </div>
 
-      <div class="sidebar-controls">
-        <button id="add-feed-btn" class="btn">➕ Add Feed</button>
-        <button id="howto-btn" class="btn ghost">❓ How To</button>
-      </div>
+      <button id="add-feed-btn" class="btn-primary"><i class="fas fa-plus"></i> Add Feed</button>
+      <button id="how-to-btn" class="btn-secondary"><i class="fas fa-question-circle"></i> How To</button>
 
-      <div class="sidebar-search">
-        <input id="feed-filter" placeholder="Search feeds..." />
-      </div>
+      <input id="feed-filter" type="text" placeholder="Search feeds...">
 
-      <nav id="feed-list" class="feed-list"></nav>
-      <div class="sidebar-footer"><small>Saved locally • Persistent</small></div>
+      <div id="feed-list" class="feed-list"></div>
+      <p class="sidebar-footer">Saved locally • Persistent</p>
     </aside>
 
-    <!-- Main -->
-    <main class="main">
-      <section id="feed-meta" class="feed-meta">
-        <h2 id="feed-name">Welcome</h2>
-        <p id="feed-sub">Choose a feed on the left or search above.</p>
-      </section>
-      <section id="article-wrap" class="article-wrap">
-        <div class="placeholder">Loading feeds...</div>
-      </section>
+    <!-- Main Articles -->
+    <main>
+      <div id="article-container" class="article-container">
+        <p style="text-align:center;">Loading...</p>
+      </div>
     </main>
   </div>
 
   <!-- Add Feed Modal -->
-  <div id="add-modal" class="modal hidden">
-    <div class="modal-card">
-      <h3>Add Feed</h3>
-      <input id="add-name" placeholder="Friendly name (e.g. BBC World)" />
-      <input id="add-url" placeholder="Feed URL (https://.../rss)" />
-      <div class="modal-actions">
-        <button id="add-save" class="btn primary">Save</button>
-        <button id="add-cancel" class="btn ghost">Cancel</button>
-      </div>
+  <div id="add-feed-modal" class="modal hidden">
+    <div class="modal-content">
+      <h3>Add New Feed</h3>
+      <input id="feed-name-input" type="text" placeholder="Feed Name">
+      <input id="feed-url-input" type="text" placeholder="Feed URL (RSS)">
+      <button id="save-feed-btn" class="btn-primary">Save</button>
+      <button id="cancel-feed-btn" class="btn-secondary">Cancel</button>
     </div>
   </div>
 
-  <!-- HowTo Modal -->
-  <div id="howto-modal" class="modal hidden">
-    <div class="modal-card">
-      <h3>How To</h3>
-      <ul>
-        <li>Click a feed to load its articles.</li>
-        <li>Search the web with DuckDuckGo above.</li>
-        <li>Share or bookmark any article.</li>
-        <li>Open Bookmarks with the 🔖 button.</li>
-      </ul>
-      <div class="modal-actions">
-        <button id="howto-close" class="btn primary">Close</button>
-      </div>
+  <!-- How To Modal -->
+  <div id="how-to-modal" class="modal hidden">
+    <div class="modal-content">
+      <h3>How To Use</h3>
+      <p>➕ Add feeds with valid RSS URLs<br>
+         ❌ Remove feeds you don’t want<br>
+         🔍 Use the search bar for DuckDuckGo<br>
+         📌 Bookmark articles to save them<br>
+         📤 Export & Share cards easily</p>
+      <button id="close-how-to-btn" class="btn-secondary">Close</button>
     </div>
   </div>
 
   <!-- Bookmarks Modal -->
   <div id="bookmarks-modal" class="modal hidden">
-    <div class="modal-card wide">
-      <div class="modal-card-head">
-        <h3>🔖 Bookmarks</h3>
-        <button id="bookmarks-close" class="btn ghost">Close</button>
-      </div>
-      <div id="bookmarks-list" class="bookmarks-list"></div>
+    <div class="modal-content bookmarks-modal-content">
+      <h3>Bookmarks</h3>
+      <div id="bookmarks-container"></div>
+      <button id="bookmarks-close-btn" class="btn-secondary">Close</button>
     </div>
   </div>
 
   <!-- Toast -->
-  <div id="toast" class="toast hidden"></div>
+  <div id="toast" class="toast"></div>
 
-  <!-- Canvas Export (hidden) -->
-  <canvas id="share-canvas" class="hidden"></canvas>
-
-  <script src="script.js" defer></script>
+  <script src="script.js"></script>
 </body>
 </html>
