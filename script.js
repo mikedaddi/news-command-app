@@ -1,3 +1,4 @@
+// --- Wait for DOM ---
 document.addEventListener('DOMContentLoaded', () => {
   const feedListContainer = document.getElementById('feed-list');
   const articleContainer = document.getElementById('article-container');
@@ -5,33 +6,87 @@ document.addEventListener('DOMContentLoaded', () => {
   const addFeedModal = document.getElementById('add-feed-modal');
   const saveFeedBtn = document.getElementById('save-feed-btn');
   const cancelFeedBtn = document.getElementById('cancel-feed-btn');
-  const bookmarksBtn = document.getElementById('bookmarks-btn');
-  const bookmarksModal = document.getElementById('bookmarks-modal');
-  const closeBookmarksBtn = document.getElementById('close-bookmarks-btn');
   const howToBtn = document.getElementById('how-to-btn');
   const howToModal = document.getElementById('how-to-modal');
   const closeHowToBtn = document.getElementById('close-how-to-btn');
-  const searchInput = document.getElementById('search-input');
-  const searchBtn = document.getElementById('search-btn');
+  const bookmarksBtn = document.getElementById('bookmarks-btn');
+  const bookmarksModal = document.getElementById('bookmarks-modal');
+  const closeBookmarksBtn = document.getElementById('close-bookmarks-btn');
   const resetBtn = document.getElementById('reset-btn');
 
-  const CORS_PROXY = 'https://api.allorigins.win/raw?url=';
+  const CORS_PROXY = "https://api.allorigins.win/raw?url=";
   let feeds = [];
 
-  // --- Save/load feeds ---
+  // --- Feed Handling ---
+  async function fetchAndDisplayFeed(feedUrl, feedElement) {
+    articleContainer.innerHTML = '<p>Loading...</p>';
+    document.querySelectorAll('.feed-item').forEach(i => i.classList.remove('active-feed'));
+    if (feedElement) feedElement.classList.add('active-feed');
+
+    try {
+      const res = await fetch(`${CORS_PROXY}${encodeURIComponent(feedUrl)}`);
+      const text = await res.text();
+      const data = new window.DOMParser().parseFromString(text, "text/xml");
+
+      articleContainer.innerHTML = '';
+      const items = data.querySelectorAll("item");
+
+      if (!items.length) {
+        articleContainer.innerHTML = "<p>No articles found.</p>";
+        return;
+      }
+
+      items.forEach(item => {
+        const title = item.querySelector("title")?.textContent || "No Title";
+        const link = item.querySelector("link")?.textContent || "#";
+        const description = (item.querySelector("description")?.textContent || "")
+          .replace(/<[^>]*>?/gm, "")
+          .substring(0, 200);
+        const pubDate = item.querySelector("pubDate")?.textContent
+          ? new Date(item.querySelector("pubDate").textContent).toLocaleDateString()
+          : "";
+
+        const thumbnail = item.querySelector("media\\:thumbnail")?.getAttribute("url") ||
+                          item.querySelector("media\\:content")?.getAttribute("url") || "";
+
+        const card = `
+          <div class="article-card">
+            ${thumbnail ? `<img src="${thumbnail}" alt="thumbnail" class="thumb" />` : ""}
+            <div class="article-body">
+              <a href="${link}" target="_blank" class="article-title">${title}</a>
+              <p>${description}...</p>
+              <span class="pub-date">${pubDate}</span>
+              <div class="article-actions">
+                <button class="share-btn"><i class="fas fa-share-alt"></i></button>
+                <button class="bookmark-btn"><i class="fas fa-bookmark"></i></button>
+              </div>
+            </div>
+          </div>
+        `;
+        articleContainer.insertAdjacentHTML("beforeend", card);
+      });
+
+      bindArticleButtons();
+
+    } catch (err) {
+      console.error(err);
+      articleContainer.innerHTML = `<p>Error loading feed: ${err.message}</p>`;
+    }
+  }
+
   function saveFeeds() {
-    localStorage.setItem('commandCenterFeeds', JSON.stringify(feeds));
+    localStorage.setItem('feeds', JSON.stringify(feeds));
   }
 
   function loadFeeds() {
-    const savedFeeds = localStorage.getItem('commandCenterFeeds');
-    if (savedFeeds) {
-      feeds = JSON.parse(savedFeeds);
+    const saved = localStorage.getItem('feeds');
+    if (saved) {
+      feeds = JSON.parse(saved);
     } else {
       feeds = [
         { name: "BBC World News", url: "http://feeds.bbci.co.uk/news/world/rss.xml" },
-        { name: "ABC News (US)", url: "https://abcnews.go.com/abcnews/usheadlines" },
-        { name: "Fox News", url: "https://moxie.foxnews.com/google-publisher/world.xml" },
+        { name: "ABC News (US)", url: "https://abcnews.go.com/abcnews/topstories" },
+        { name: "Fox News", url: "https://feeds.foxnews.com/foxnews/latest" },
         { name: "TMZ Entertainment", url: "https://www.tmz.com/rss.xml" },
         { name: "TechCrunch", url: "https://techcrunch.com/feed/" }
       ];
@@ -39,86 +94,49 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
-  // --- Render sidebar ---
   function renderFeedList() {
     feedListContainer.innerHTML = '';
-    feeds.forEach((feed, index) => {
-      const item = document.createElement('div');
-      item.className = 'feed-item';
-      item.dataset.url = feed.url;
-      item.dataset.index = index;
-      item.innerHTML = `
-        <span>${feed.name}</span>
-        <button class="delete-feed-btn"><i class="fas fa-times"></i></button>
+    feeds.forEach((feed, i) => {
+      const el = `
+        <div class="feed-item" data-url="${feed.url}" data-index="${i}">
+          <span>${feed.name}</span>
+          <button class="delete-feed-btn">x</button>
+        </div>
       `;
-      feedListContainer.appendChild(item);
+      feedListContainer.insertAdjacentHTML('beforeend', el);
     });
   }
 
-  // --- Fetch feed ---
-  async function fetchAndDisplayFeed(url, feedElement) {
-    articleContainer.innerHTML = '<div class="loading-spinner"></div>';
-    document.querySelectorAll('.feed-item').forEach(i => i.classList.remove('active-feed'));
-    if (feedElement) feedElement.classList.add('active-feed');
-
-    try {
-      const res = await fetch(`${CORS_PROXY}${encodeURIComponent(url)}`);
-      const text = await res.text();
-      const data = new DOMParser().parseFromString(text, "text/xml");
-      const items = data.querySelectorAll("item");
-
-      articleContainer.innerHTML = '';
-      items.forEach(item => {
-        const title = item.querySelector("title")?.textContent || 'No Title';
-        const link = item.querySelector("link")?.textContent || '#';
-        const description = (item.querySelector("description")?.textContent || '').replace(/<[^>]*>?/gm, "").substring(0, 150);
-        const pubDate = item.querySelector("pubDate")?.textContent ? new Date(item.querySelector("pubDate").textContent).toLocaleDateString() : '';
-
-        const media = item.querySelector("media\\:content, enclosure, content");
-        const thumbnail = media?.getAttribute("url") || '';
-
-        const card = document.createElement('div');
-        card.className = 'article-card';
-        card.innerHTML = `
-          ${thumbnail ? `<img src="${thumbnail}" class="article-thumb">` : ''}
-          <div class="article-info">
-            <a href="${link}" target="_blank" class="article-title">${title}</a>
-            <p>${description}...</p>
-            <small>${pubDate}</small>
-          </div>
-          <div class="article-actions">
-            <button class="share-btn"><i class="fas fa-share-alt"></i></button>
-            <button class="bookmark-btn"><i class="fas fa-bookmark"></i></button>
-          </div>
-        `;
-        articleContainer.appendChild(card);
-
-        // Share button
-        card.querySelector('.share-btn').addEventListener('click', () => {
-          if (navigator.share) {
-            navigator.share({ title, url: link });
-          } else {
-            navigator.clipboard.writeText(link);
-            alert('Link copied!');
-          }
-        });
-
-        // Bookmark button
-        card.querySelector('.bookmark-btn').addEventListener('click', () => {
-          const bookmarks = document.getElementById('bookmarks');
-          const clone = card.cloneNode(true);
-          clone.querySelectorAll('.share-btn,.bookmark-btn').forEach(b => b.remove());
-          bookmarks.appendChild(clone);
-        });
+  function bindArticleButtons() {
+    document.querySelectorAll('.bookmark-btn').forEach(btn => {
+      btn.addEventListener('click', e => {
+        const card = e.target.closest('.article-card').cloneNode(true);
+        card.querySelectorAll('.bookmark-btn, .share-btn').forEach(b => b.remove());
+        document.getElementById('bookmarks').appendChild(card);
       });
-    } catch (err) {
-      articleContainer.innerHTML = `<p>Failed to load feed. ${err.message}</p>`;
-    }
+    });
+
+    document.querySelectorAll('.share-btn').forEach(btn => {
+      btn.addEventListener('click', e => {
+        const title = e.target.closest('.article-card').querySelector('.article-title').innerText;
+        const link = e.target.closest('.article-card').querySelector('.article-title').href;
+        if (navigator.share) {
+          navigator.share({ title, url: link });
+        } else {
+          alert(`Share this link: ${link}`);
+        }
+      });
+    });
   }
 
-  // --- Events ---
+  // --- Event Listeners ---
   addFeedBtn.addEventListener('click', () => addFeedModal.classList.remove('hidden'));
   cancelFeedBtn.addEventListener('click', () => addFeedModal.classList.add('hidden'));
+  howToBtn.addEventListener('click', () => howToModal.classList.remove('hidden'));
+  closeHowToBtn.addEventListener('click', () => howToModal.classList.add('hidden'));
+  bookmarksBtn.addEventListener('click', () => bookmarksModal.classList.remove('hidden'));
+  closeBookmarksBtn.addEventListener('click', () => bookmarksModal.classList.add('hidden'));
+
   saveFeedBtn.addEventListener('click', () => {
     const name = document.getElementById('feed-name-input').value.trim();
     const url = document.getElementById('feed-url-input').value.trim();
@@ -130,44 +148,46 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 
-  feedListContainer.addEventListener('click', e => {
-    const feedEl = e.target.closest('.feed-item');
-    if (!feedEl) return;
-    if (e.target.closest('.delete-feed-btn')) {
-      feeds.splice(feedEl.dataset.index, 1);
-      saveFeeds();
-      renderFeedList();
-      if (feeds.length) fetchAndDisplayFeed(feeds[0].url, document.querySelector('.feed-item'));
-      return;
-    }
-    fetchAndDisplayFeed(feedEl.dataset.url, feedEl);
-  });
-
-  bookmarksBtn.addEventListener('click', () => bookmarksModal.classList.remove('hidden'));
-  closeBookmarksBtn.addEventListener('click', () => bookmarksModal.classList.add('hidden'));
-  howToBtn.addEventListener('click', () => howToModal.classList.remove('hidden'));
-  closeHowToBtn.addEventListener('click', () => howToModal.classList.add('hidden'));
   resetBtn.addEventListener('click', () => {
-    localStorage.removeItem('commandCenterFeeds');
+    localStorage.removeItem('feeds');
     loadFeeds();
     renderFeedList();
-    fetchAndDisplayFeed(feeds[0].url, document.querySelector('.feed-item'));
+    initializeApp(true);
   });
 
-  // Search
-  searchBtn.addEventListener('click', () => {
-    const query = searchInput.value.trim();
-    if (query) window.open(`https://duckduckgo.com/?q=${encodeURIComponent(query)}`, '_blank');
+  feedListContainer.addEventListener('click', e => {
+    const target = e.target;
+    const feedEl = target.closest('.feed-item');
+
+    if (target.classList.contains('delete-feed-btn')) {
+      const index = feedEl.dataset.index;
+      feeds.splice(index, 1);
+      saveFeeds();
+      renderFeedList();
+      initializeApp(true);
+    } else if (feedEl) {
+      fetchAndDisplayFeed(feedEl.dataset.url, feedEl);
+    }
   });
-  searchInput.addEventListener('keypress', e => {
-    if (e.key === 'Enter') searchBtn.click();
+
+  document.getElementById('search-btn').addEventListener('click', () => {
+    const q = document.getElementById('global-search').value.trim();
+    if (q) window.open(`https://duckduckgo.com/?q=${encodeURIComponent(q)}`, "_blank");
+  });
+
+  document.getElementById('global-search').addEventListener('keypress', e => {
+    if (e.key === 'Enter') {
+      const q = e.target.value.trim();
+      if (q) window.open(`https://duckduckgo.com/?q=${encodeURIComponent(q)}`, "_blank");
+    }
   });
 
   // --- Init ---
-  function init() {
-    loadFeeds();
+  function initializeApp(force = false) {
+    if (!force) loadFeeds();
     renderFeedList();
-    if (feeds.length) fetchAndDisplayFeed(feeds[0].url, document.querySelector('.feed-item'));
+    const first = document.querySelector('.feed-item');
+    if (first) fetchAndDisplayFeed(first.dataset.url, first);
   }
-  init();
+  initializeApp();
 });
