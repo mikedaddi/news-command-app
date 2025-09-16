@@ -28,15 +28,15 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Default feed list (includes your requested feeds)
   const DEFAULT_FEEDS = [
-    { name: "BBC World News", url: "https://feeds.bbci.co.uk/news/world/rss.xml" },
-    { name: "ABC News (US)", url: "https://abcnews.go.com/abcnews/topstories" },
-    { name: "Fox News", url: "https://feeds.foxnews.com/foxnews/latest" },
-    { name: "TMZ Entertainment", url: "https://www.tmz.com/rss.xml" },
-    { name: "TechCrunch", url: "https://techcrunch.com/feed/" },
-    { name: "National Weather Service News", url: "https://www.weather.gov/rss/" },
-    { name: "The Hollywood Reporter", url: "https://hollywoodreporter.com/c/news/feed/" },
-    { name: "HuffPost Entertainment", url: "https://www.huffpost.com/entertainment/feed" }
-  ];
+  { name: "BBC World News", url: "https://feeds.bbci.co.uk/news/world/rss.xml" },
+  { name: "ABC News (US)", url: "https://abcnews.go.com/abcnews/topstories" },
+  { name: "Fox News", url: "https://feeds.foxnews.com/foxnews/latest" },
+  { name: "TMZ Entertainment", url: "https://www.tmz.com/rss.xml" },
+  { name: "TechCrunch", url: "https://techcrunch.com/feed/" },
+  { name: "National Weather Service News", url: "https://www.weather.gov/rss/" },
+  { name: "The Hollywood Reporter", url: "https://hollywoodreporter.com/c/news/feed/" },
+  { name: "HuffPost Entertainment", url: "https://www.huffpost.com/entertainment/feed" }
+];
 
   // State
   let feeds = [];
@@ -380,3 +380,4 @@ document.addEventListener('DOMContentLoaded', () => {
 
   initialize();
 });
+
