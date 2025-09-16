@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>News Command Center</title>
   <link rel="stylesheet" href="style.css" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
@@ -13,70 +13,85 @@
       <img src="logo.png" alt="App Logo" class="app-logo" />
       <h1>News Command Center</h1>
     </div>
-    <div class="search-bar">
-      <input id="global-search" type="text" placeholder="DuckDuckGo Search — press Enter" />
-      <button id="search-btn"><i class="fas fa-search"></i></button>
+
+    <div class="search-wrap">
+      <input id="global-search" placeholder="DuckDuckGo search — press Enter" />
+      <button id="search-btn" title="Search"><i class="fas fa-search"></i></button>
     </div>
   </header>
 
-  <div class="app-container">
-    <!-- Sidebar -->
+  <div class="app-shell">
     <aside class="sidebar">
-      <div class="sidebar-header">
-        <h2><i class="fas fa-newspaper"></i> MY FEED</h2>
-        <button id="reset-btn" class="reset-btn">RESET</button>
-        <button id="bookmarks-btn" class="bookmark-open"><i class="fas fa-bookmark"></i></button>
+      <div class="sidebar-top">
+        <h2><i class="fas fa-newspaper"></i> My Feed</h2>
+        <div class="sidebar-actions">
+          <button id="bookmarks-btn" title="Bookmarks"><i class="fas fa-bookmark"></i></button>
+          <button id="reset-btn" title="Reset feeds"><i class="fas fa-rotate-right"></i></button>
+        </div>
       </div>
 
       <div class="sidebar-controls">
-        <button id="add-feed-btn" class="add-feed-btn">+ Add Feed</button>
-        <button id="how-to-btn" class="how-to-btn">? How To</button>
-        <input type="text" id="feed-search" placeholder="Search feeds..." />
+        <button id="add-feed-btn" class="control-btn">+ Add Feed</button>
+        <button id="how-to-btn" class="control-btn ghost">How To</button>
+        <input id="feed-search" placeholder="Filter feeds..." />
       </div>
 
-      <div id="feed-list"></div>
-      <p class="sidebar-footer">Saved locally • Persistent</p>
+      <nav id="feed-list" class="feed-list" aria-label="feeds"></nav>
+      <div class="sidebar-footer">Saved locally • Persistent</div>
     </aside>
 
-    <!-- Main Content -->
-    <main class="main-content">
-      <div id="article-container">
-        <p>Loading...</p>
+    <main class="main">
+      <div id="article-container" class="article-container">
+        <p class="muted">Loading articles...</p>
       </div>
     </main>
   </div>
 
   <!-- Add Feed Modal -->
   <div id="add-feed-modal" class="modal hidden">
-    <div class="modal-content">
-      <h3>Add a New Feed</h3>
-      <input id="feed-name-input" type="text" placeholder="Feed name" />
-      <input id="feed-url-input" type="text" placeholder="Feed URL" />
+    <div class="modal-card">
+      <h3>Add Feed</h3>
+      <input id="feed-name-input" placeholder="Friendly name (e.g. BBC World)" />
+      <input id="feed-url-input" placeholder="Feed URL (https://.../rss)" />
       <div class="modal-actions">
-        <button id="save-feed-btn">Save</button>
-        <button id="cancel-feed-btn">Cancel</button>
+        <button id="save-feed-btn" class="btn primary">Save</button>
+        <button id="cancel-feed-btn" class="btn ghost">Cancel</button>
       </div>
     </div>
   </div>
 
   <!-- How To Modal -->
   <div id="how-to-modal" class="modal hidden">
-    <div class="modal-content">
-      <h3>How To Use</h3>
-      <p>Use the sidebar to select feeds. Add your own custom RSS feeds. Use the bookmark button to save articles and the share button to share them.</p>
-      <button id="close-how-to-btn">Close</button>
+    <div class="modal-card">
+      <h3>How To</h3>
+      <ul>
+        <li>Click a feed on the left to load articles.</li>
+        <li>Use the top search to open DuckDuckGo results.</li>
+        <li>Click the bookmark icon to save an article (saved in your browser).</li>
+        <li>Open Bookmarks with the 🔖 button.</li>
+      </ul>
+      <div class="modal-actions">
+        <button id="close-how-to-btn" class="btn primary">Close</button>
+      </div>
     </div>
   </div>
 
   <!-- Bookmarks Modal -->
   <div id="bookmarks-modal" class="modal hidden">
-    <div class="modal-content">
-      <h3>Bookmarked Articles</h3>
-      <div id="bookmarks"></div>
-      <button id="close-bookmarks-btn">Close</button>
+    <div class="modal-card wide">
+      <div class="modal-head">
+        <h3>Bookmarks</h3>
+        <button id="close-bookmarks-btn" class="btn ghost">Close</button>
+      </div>
+      <div id="bookmarks" class="bookmarks-list">
+        <!-- bookmarks injected here -->
+      </div>
     </div>
   </div>
 
-  <script src="script.js"></script>
+  <!-- Toast -->
+  <div id="toast" class="toast hidden"></div>
+
+  <script src="script.js" defer></script>
 </body>
 </html>
