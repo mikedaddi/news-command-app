@@ -60,6 +60,16 @@ document.addEventListener('DOMContentLoaded', () => {
       });
   }
 
+  // Helper: extract thumbnail
+  function getThumbnail(item) {
+    let url = item.querySelector("media\\:content, enclosure, image, thumbnail")?.getAttribute("url");
+    if (!url) {
+      const imgTag = item.querySelector("media\\:thumbnail");
+      if (imgTag) url = imgTag.getAttribute("url");
+    }
+    return url || "https://via.placeholder.com/120x90.png?text=No+Image";
+  }
+
   // Fetch & render feed
   async function loadFeed(idx) {
     const feed = feeds[idx];
@@ -76,16 +86,20 @@ document.addEventListener('DOMContentLoaded', () => {
         const title = item.querySelector("title")?.textContent || "No Title";
         const link = item.querySelector("link")?.textContent || "#";
         const desc = (item.querySelector("description")?.textContent || "").replace(/<[^>]*>/g, "").slice(0, 150);
+        const thumb = getThumbnail(item);
 
         const card = document.createElement('div');
         card.className = 'article-card';
         card.innerHTML = `
-          <h3><a href="${link}" target="_blank">${title}</a></h3>
-          <p>${desc}...</p>
-          <div class="card-actions">
-            <button class="share-btn"><i class="fas fa-share-alt"></i></button>
-            <button class="export-btn"><i class="fas fa-image"></i></button>
-            <button class="bookmark-btn"><i class="fas fa-bookmark"></i></button>
+          <div class="thumb"><img src="${thumb}" alt="thumbnail"></div>
+          <div class="article-body">
+            <h3><a href="${link}" target="_blank">${title}</a></h3>
+            <p>${desc}...</p>
+            <div class="card-actions">
+              <button class="share-btn"><i class="fas fa-share-alt"></i></button>
+              <button class="export-btn"><i class="fas fa-image"></i></button>
+              <button class="bookmark-btn"><i class="fas fa-bookmark"></i></button>
+            </div>
           </div>
         `;
 
