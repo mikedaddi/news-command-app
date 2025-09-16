@@ -1,203 +1,158 @@
-document.addEventListener('DOMContentLoaded', () => {
-  const feedList = document.getElementById('feed-list');
-  const articleContainer = document.getElementById('article-container');
-  const addFeedBtn = document.getElementById('add-feed-btn');
-  const addModal = document.getElementById('add-feed-modal');
-  const saveFeedBtn = document.getElementById('save-feed-btn');
-  const cancelFeedBtn = document.getElementById('cancel-feed-btn');
-  const howtoBtn = document.getElementById('how-to-btn');
-  const howtoModal = document.getElementById('how-to-modal');
-  const howtoClose = document.getElementById('close-how-to-btn');
-  const bookmarksBtn = document.getElementById('bookmarks-btn');
-  const bookmarksModal = document.getElementById('bookmarks-modal');
-  const bookmarksClose = document.getElementById('bookmarks-close-btn');
-  const bookmarksContainer = document.getElementById('bookmarks-container');
-  const resetBtn = document.getElementById('reset-btn');
-  const toast = document.getElementById('toast');
-  const feedFilter = document.getElementById('feed-filter');
-  const topSearch = document.getElementById('top-search');
-  const topSearchBtn = document.getElementById('top-search-btn');
+:root {
+  --bg: #121212;
+  --fg: #e0e0e0;
+  --accent: #00cfff;
+  --card-bg: #1e1e1e;
+  --card-border: #333;
+  --btn-bg: #00cfff;
+  --btn-fg: #121212;
+  --toast-bg: #333;
+}
 
-  const CORS = 'https://api.allorigins.win/raw?url=';
-  let feeds = [];
-  let bookmarks = JSON.parse(localStorage.getItem('bookmarks')) || [];
+body {
+  margin: 0;
+  font-family: 'Segoe UI', sans-serif;
+  background: var(--bg);
+  color: var(--fg);
+}
 
-  const defaultFeeds = [
-    { name: "BBC World News", url: "http://feeds.bbci.co.uk/news/world/rss.xml" },
-    { name: "ABC News (US)", url: "https://abcnews.go.com/abcnews/topstories" },
-    { name: "Fox News", url: "https://moxie.foxnews.com/google-publisher/world.xml" },
-    { name: "TMZ Entertainment", url: "https://www.tmz.com/rss.xml" }
-  ];
+.topbar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+  border-bottom: 1px solid var(--card-border);
+}
+.topbar .app-logo {
+  height: 50px;
+  margin-right: 1rem;
+}
+.topbar h1 {
+  flex: 1;
+  text-align: center;
+}
+.search-bar {
+  display: flex;
+  background: var(--card-bg);
+  border-radius: 6px;
+  overflow: hidden;
+}
+.search-bar input {
+  border: none;
+  padding: 0.5rem;
+  background: transparent;
+  color: var(--fg);
+}
+.search-bar button {
+  background: var(--btn-bg);
+  color: var(--btn-fg);
+  border: none;
+  padding: 0.5rem 1rem;
+  cursor: pointer;
+}
 
-  // Toasts
-  function showToast(msg) {
-    toast.textContent = msg;
-    toast.classList.add('show');
-    setTimeout(() => toast.classList.remove('show'), 3000);
-  }
+.container {
+  display: flex;
+}
 
-  // Feeds persistence
-  function save() {
-    localStorage.setItem('feeds', JSON.stringify(feeds));
-    localStorage.setItem('bookmarks', JSON.stringify(bookmarks));
-  }
+.sidebar {
+  width: 250px;
+  background: #1a1a1a;
+  padding: 1rem;
+  border-right: 1px solid var(--card-border);
+}
+.sidebar-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.sidebar h2 {
+  margin: 0;
+}
+.feed-list {
+  margin-top: 1rem;
+}
+.feed-item {
+  display: flex;
+  justify-content: space-between;
+  padding: 0.5rem;
+  margin-bottom: 0.3rem;
+  background: var(--card-bg);
+  border-radius: 4px;
+  cursor: pointer;
+}
+.feed-item span { flex: 1; }
+.feed-item:hover { background: #2a2a2a; }
+.feed-item i { color: red; cursor: pointer; }
 
-  function load() {
-    feeds = JSON.parse(localStorage.getItem('feeds')) || defaultFeeds;
-  }
+main {
+  flex: 1;
+  padding: 1rem;
+}
 
-  // Render feed list
-  function renderFeeds(filter = '') {
-    feedList.innerHTML = '';
-    feeds
-      .filter(f => f.name.toLowerCase().includes(filter.toLowerCase()))
-      .forEach((feed, i) => {
-        const item = document.createElement('div');
-        item.className = 'feed-item';
-        item.dataset.idx = i;
-        item.innerHTML = `<span>${feed.name}</span> <i class="fas fa-times"></i>`;
-        feedList.appendChild(item);
-      });
-  }
+.article-card {
+  display: flex;
+  gap: 1rem;
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  border-radius: 6px;
+  padding: 1rem;
+  margin-bottom: 1rem;
+}
+.article-card .thumb {
+  flex: 0 0 120px;
+}
+.article-card .thumb img {
+  width: 120px;
+  height: 90px;
+  object-fit: cover;
+  border-radius: 4px;
+}
+.article-card .article-body {
+  flex: 1;
+}
+.article-card h3 a {
+  color: var(--accent);
+  text-decoration: none;
+}
+.card-actions {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+}
+.card-actions button {
+  background: #333;
+  color: var(--fg);
+  border: none;
+  padding: 0.3rem 0.6rem;
+  cursor: pointer;
+  border-radius: 4px;
+}
 
-  // Helper: extract thumbnail
-  function getThumbnail(item) {
-    let url = item.querySelector("media\\:content, enclosure, image, thumbnail")?.getAttribute("url");
-    if (!url) {
-      const imgTag = item.querySelector("media\\:thumbnail");
-      if (imgTag) url = imgTag.getAttribute("url");
-    }
-    return url || "https://via.placeholder.com/120x90.png?text=No+Image";
-  }
+.modal {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0,0,0,0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.modal.hidden { display: none; }
+.modal-content {
+  background: var(--card-bg);
+  padding: 2rem;
+  border-radius: 6px;
+}
 
-  // Fetch & render feed
-  async function loadFeed(idx) {
-    const feed = feeds[idx];
-    if (!feed) return;
-    articleContainer.innerHTML = `<p style="text-align:center;">Loading ${feed.name}...</p>`;
-    try {
-      const res = await fetch(CORS + encodeURIComponent(feed.url));
-      const str = await res.text();
-      const data = new DOMParser().parseFromString(str, "text/xml");
-      const items = [...data.querySelectorAll("item")].slice(0, 10);
-
-      articleContainer.innerHTML = `<h2>${feed.name}</h2><p>${feed.url}</p>`;
-      items.forEach(item => {
-        const title = item.querySelector("title")?.textContent || "No Title";
-        const link = item.querySelector("link")?.textContent || "#";
-        const desc = (item.querySelector("description")?.textContent || "").replace(/<[^>]*>/g, "").slice(0, 150);
-        const thumb = getThumbnail(item);
-
-        const card = document.createElement('div');
-        card.className = 'article-card';
-        card.innerHTML = `
-          <div class="thumb"><img src="${thumb}" alt="thumbnail"></div>
-          <div class="article-body">
-            <h3><a href="${link}" target="_blank">${title}</a></h3>
-            <p>${desc}...</p>
-            <div class="card-actions">
-              <button class="share-btn"><i class="fas fa-share-alt"></i></button>
-              <button class="export-btn"><i class="fas fa-image"></i></button>
-              <button class="bookmark-btn"><i class="fas fa-bookmark"></i></button>
-            </div>
-          </div>
-        `;
-
-        // Share
-        card.querySelector('.share-btn').onclick = () => {
-          if (navigator.share) {
-            navigator.share({ title, text: desc, url: link }).catch(err => console.log("Share cancelled", err));
-          } else {
-            alert("Sharing not supported on this device.");
-          }
-        };
-
-        // Export
-        card.querySelector('.export-btn').onclick = async () => {
-          const canvas = await html2canvas(card);
-          const dataUrl = canvas.toDataURL();
-          if (navigator.share) {
-            const blob = await (await fetch(dataUrl)).blob();
-            const file = new File([blob], "article.png", { type: "image/png" });
-            navigator.share({ files: [file], title, text: desc });
-          } else {
-            const linkEl = document.createElement('a');
-            linkEl.href = dataUrl;
-            linkEl.download = "article.png";
-            linkEl.click();
-          }
-        };
-
-        // Bookmark
-        card.querySelector('.bookmark-btn').onclick = () => {
-          if (!bookmarks.find(b => b.link === link)) {
-            bookmarks.push({ title, link });
-            save();
-            showToast("Bookmarked!");
-          }
-        };
-
-        articleContainer.appendChild(card);
-      });
-    } catch (err) {
-      articleContainer.innerHTML = `<p style="color:red;">Error loading feed: ${err.message}</p>`;
-    }
-  }
-
-  // Render bookmarks
-  function renderBookmarks() {
-    bookmarksContainer.innerHTML = bookmarks.length ? '' : '<p>No bookmarks yet.</p>';
-    bookmarks.forEach(b => {
-      const div = document.createElement('div');
-      div.className = 'bookmark-item';
-      div.innerHTML = `<a href="${b.link}" target="_blank">${b.title}</a>`;
-      bookmarksContainer.appendChild(div);
-    });
-  }
-
-  // Events
-  addFeedBtn.onclick = () => addModal.classList.remove('hidden');
-  cancelFeedBtn.onclick = () => addModal.classList.add('hidden');
-  saveFeedBtn.onclick = () => {
-    const name = document.getElementById('feed-name-input').value.trim();
-    const url = document.getElementById('feed-url-input').value.trim();
-    if (name && url) {
-      feeds.push({ name, url });
-      save();
-      renderFeeds();
-      addModal.classList.add('hidden');
-      showToast("Feed added");
-    }
-  };
-  howtoBtn.onclick = () => howtoModal.classList.remove('hidden');
-  howtoClose.onclick = () => howtoModal.classList.add('hidden');
-  bookmarksBtn.onclick = () => { renderBookmarks(); bookmarksModal.classList.remove('hidden'); };
-  bookmarksClose.onclick = () => bookmarksModal.classList.add('hidden');
-  resetBtn.onclick = () => { feeds = defaultFeeds; save(); renderFeeds(); loadFeed(0); showToast("Feeds reset"); };
-
-  feedList.onclick = (e) => {
-    if (e.target.matches('.fa-times')) {
-      const idx = e.target.parentElement.dataset.idx;
-      feeds.splice(idx, 1);
-      save();
-      renderFeeds();
-      loadFeed(0);
-    } else if (e.target.closest('.feed-item')) {
-      loadFeed(e.target.closest('.feed-item').dataset.idx);
-    }
-  };
-
-  feedFilter.oninput = () => renderFeeds(feedFilter.value);
-
-  function doSearch() {
-    if (!topSearch.value) return;
-    window.open("https://duckduckgo.com/?q=" + encodeURIComponent(topSearch.value), '_blank');
-  }
-  topSearchBtn.onclick = doSearch;
-  topSearch.onkeydown = (e) => { if (e.key === "Enter") doSearch(); };
-
-  // Init
-  load();
-  renderFeeds();
-  if (feeds.length) loadFeed(0);
-});
+.toast {
+  position: fixed;
+  bottom: 1rem; left: 50%;
+  transform: translateX(-50%);
+  background: var(--toast-bg);
+  color: var(--fg);
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+.toast.show { opacity: 1; }
