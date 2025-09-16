@@ -7,6 +7,8 @@
   --btn-bg: #00cfff;
   --btn-fg: #121212;
   --toast-bg: #333;
+  --share-color: #00cfff;
+  --bookmark-color: #ffd700;
 }
 
 body {
@@ -19,18 +21,21 @@ body {
 .topbar {
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: space-between;
   padding: 1rem;
   border-bottom: 1px solid var(--card-border);
 }
-.topbar .app-logo {
-  height: 50px;
-  margin-right: 1rem;
+
+.logo-container {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
 }
-.topbar h1 {
-  flex: 1;
-  text-align: center;
+
+.app-logo {
+  height: 60px;
 }
+
 .search-bar {
   display: flex;
   background: var(--card-bg);
@@ -42,6 +47,7 @@ body {
   padding: 0.5rem;
   background: transparent;
   color: var(--fg);
+  width: 250px;
 }
 .search-bar button {
   background: var(--btn-bg);
@@ -115,18 +121,47 @@ main {
   color: var(--accent);
   text-decoration: none;
 }
+
 .card-actions {
   display: flex;
   gap: 0.5rem;
   margin-top: 0.5rem;
 }
 .card-actions button {
-  background: #333;
-  color: var(--fg);
   border: none;
-  padding: 0.3rem 0.6rem;
+  padding: 0.4rem 0.6rem;
   cursor: pointer;
   border-radius: 4px;
+  font-size: 1rem;
+}
+
+/* Share Button */
+.card-actions .share-btn {
+  background: var(--share-color);
+  color: #121212;
+  font-weight: bold;
+}
+.card-actions .share-btn:hover {
+  background: #00e6ff;
+}
+
+/* Bookmark Button */
+.card-actions .bookmark-btn {
+  background: var(--bookmark-color);
+  color: #121212;
+  font-weight: bold;
+}
+.card-actions .bookmark-btn:hover {
+  background: #ffdf40;
+}
+
+/* Export Button */
+.card-actions .export-btn {
+  background: #444;
+  color: var(--fg);
+}
+.card-actions .export-btn:hover {
+  background: #666;
 }
 
 .modal {
@@ -142,6 +177,8 @@ main {
   background: var(--card-bg);
   padding: 2rem;
   border-radius: 6px;
+  max-width: 500px;
+  width: 90%;
 }
 
 .toast {
