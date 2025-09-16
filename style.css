@@ -91,11 +91,25 @@ main {
 }
 
 .article-card {
+  display: flex;
+  gap: 1rem;
   background: var(--card-bg);
   border: 1px solid var(--card-border);
   border-radius: 6px;
   padding: 1rem;
   margin-bottom: 1rem;
+}
+.article-card .thumb {
+  flex: 0 0 120px;
+}
+.article-card .thumb img {
+  width: 120px;
+  height: 90px;
+  object-fit: cover;
+  border-radius: 4px;
+}
+.article-card .article-body {
+  flex: 1;
 }
 .article-card h3 a {
   color: var(--accent);
@@ -104,6 +118,7 @@ main {
 .card-actions {
   display: flex;
   gap: 0.5rem;
+  margin-top: 0.5rem;
 }
 .card-actions button {
   background: #333;
