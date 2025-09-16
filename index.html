@@ -1,46 +1,40 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>News Command Center</title>
-  <link rel="stylesheet" href="style.css">
-  <script src="https://kit.fontawesome.com/a2e0e6ad63.js" crossorigin="anonymous"></script>
+  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
-  <header class="topbar">
-    <div class="logo-container">
-      <img src="logo.png" alt="App Logo" class="app-logo">
-      <h1>News Command Center</h1>
-    </div>
+  <header class="app-header">
+    <img src="logo.png" alt="App Logo" class="app-logo">
+    <h1>News Command Center</h1>
     <div class="search-bar">
-      <input id="top-search" type="text" placeholder="DuckDuckGo Search — press Enter or click 🔍">
-      <button id="top-search-btn"><i class="fas fa-search"></i></button>
+      <input id="search-input" type="text" placeholder="DuckDuckGo Search — press Enter or click 🔍">
+      <button id="search-btn"><i class="fas fa-search"></i></button>
     </div>
   </header>
 
-  <div class="container">
+  <div class="app-container">
     <!-- Sidebar -->
     <aside class="sidebar">
       <div class="sidebar-header">
-        <h2><i class="fas fa-newspaper"></i> MY FEED</h2>
-        <button id="reset-btn" class="reset-btn">RESET</button>
-        <button id="bookmarks-btn" class="bookmark-toggle"><i class="fas fa-bookmark"></i></button>
+        <h2><i class="fas fa-newspaper"></i> My Feed</h2>
+        <button id="bookmarks-btn" class="icon-btn"><i class="fas fa-bookmark"></i></button>
+        <button id="reset-btn" class="icon-btn"><i class="fas fa-undo"></i> Reset</button>
       </div>
-
-      <button id="add-feed-btn" class="btn-primary"><i class="fas fa-plus"></i> Add Feed</button>
-      <button id="how-to-btn" class="btn-secondary"><i class="fas fa-question-circle"></i> How To</button>
-
-      <input id="feed-filter" type="text" placeholder="Search feeds...">
-
+      <button id="add-feed-btn" class="primary-btn"><i class="fas fa-plus"></i> Add Feed</button>
+      <button id="how-to-btn" class="secondary-btn"><i class="fas fa-question-circle"></i> How To</button>
+      <input id="feed-search" type="text" placeholder="Search feeds...">
       <div id="feed-list" class="feed-list"></div>
-      <p class="sidebar-footer">Saved locally • Persistent</p>
     </aside>
 
-    <!-- Main Articles -->
-    <main>
+    <!-- Main -->
+    <main class="main-content">
       <div id="article-container" class="article-container">
-        <p style="text-align:center;">Loading...</p>
+        <p>Loading articles...</p>
       </div>
     </main>
   </div>
@@ -48,40 +42,11 @@
   <!-- Add Feed Modal -->
   <div id="add-feed-modal" class="modal hidden">
     <div class="modal-content">
-      <h3>Add New Feed</h3>
-      <input id="feed-name-input" type="text" placeholder="Feed Name">
-      <input id="feed-url-input" type="text" placeholder="Feed URL (RSS)">
-      <button id="save-feed-btn" class="btn-primary">Save</button>
-      <button id="cancel-feed-btn" class="btn-secondary">Cancel</button>
+      <h3>Add Feed</h3>
+      <input id="feed-name-input" type="text" placeholder="Feed name">
+      <input id="feed-url-input" type="text" placeholder="Feed URL">
+      <div class="modal-actions">
+        <button id="save-feed-btn" class="primary-btn">Save</button>
+        <button id="cancel-feed-btn" class="secondary-btn">Cancel</button>
+      </div>
     </div>
-  </div>
-
-  <!-- How To Modal -->
-  <div id="how-to-modal" class="modal hidden">
-    <div class="modal-content">
-      <h3>How To Use</h3>
-      <p>➕ Add feeds with valid RSS URLs<br>
-         ❌ Remove feeds you don’t want<br>
-         🔍 Use the search bar for DuckDuckGo<br>
-         📌 Bookmark articles to save them<br>
-         📤 Export & Share cards easily</p>
-      <button id="close-how-to-btn" class="btn-secondary">Close</button>
-    </div>
-  </div>
-
-  <!-- Bookmarks Modal -->
-  <div id="bookmarks-modal" class="modal hidden">
-    <div class="modal-content bookmarks-modal-content">
-      <h3>Bookmarks</h3>
-      <div id="bookmarks-container"></div>
-      <button id="bookmarks-close-btn" class="btn-secondary">Close</button>
-    </div>
-  </div>
-
-  <!-- Toast -->
-  <div id="toast" class="toast"></div>
-
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-  <script src="script.js"></script>
-</body>
-</html>
