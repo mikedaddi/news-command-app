@@ -19,10 +19,8 @@ body {
   flex-direction: column;
 }
 
-.app-logo-text {
+.sidebar-title {
   text-align: center;
-  font-size: 2rem;
-  font-weight: bold;
   color: #4dd0ff;
   margin: 0 0 10px 0;
 }
@@ -101,7 +99,7 @@ body {
 
 .app-title {
   margin: 0;
-  color: #fff;
+  color: #4dd0ff;
   font-size: 1.6rem;
 }
 
@@ -154,6 +152,11 @@ body {
   cursor: pointer;
 }
 
+audio, video {
+  margin-top: 10px;
+  max-width: 100%;
+}
+
 .modal {
   position: fixed;
   top: 0;
@@ -184,10 +187,4 @@ body {
   float: right;
   font-size: 1.5rem;
   color: #fff;
-}
-
-audio, video {
-  width: 100%;
-  margin-top: 10px;
-  border-radius: 4px;
 }
