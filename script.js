@@ -16,8 +16,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
   const CORS_PROXY_URL = 'https://api.allorigins.win/raw?url=';
 
-  // --- Final Default Feeds ---
-  const FINAL_DEFAULT_FEEDS = [
+  // --- Default Feeds ---
+  const DEFAULT_FEEDS = [
     { name: "BBC World News", url: "https://feeds.bbci.co.uk/news/world/rss.xml" },
     { name: "ABC News (US)", url: "https://abcnews.go.com/abcnews/topstories" },
     { name: "Fox News", url: "https://feeds.foxnews.com/foxnews/latest" },
@@ -33,7 +33,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // --- Fetch and Render Articles ---
   async function fetchAndDisplayFeed(feedUrl, feedElement) {
-    articleContainer.innerHTML = '<p style="text-align:center;">Loading...</p>';
+    articleContainer.innerHTML = '<div class="loading-spinner"></div>';
     document.querySelectorAll('.feed-item').forEach(item => item.classList.remove('active-feed'));
     if (feedElement) feedElement.classList.add('active-feed');
 
@@ -53,21 +53,22 @@ document.addEventListener('DOMContentLoaded', () => {
       items.forEach(item => {
         const title = item.querySelector("title")?.textContent || 'No Title';
         const link = item.querySelector("link")?.textContent || '#';
-        const description = (item.querySelector("description")?.textContent || '').replace(/<[^>]*>?/gm, "").substring(0, 150);
-        const pubDate = item.querySelector("pubDate")?.textContent ? new Date(item.querySelector("pubDate").textContent).toLocaleDateString() : '';
+        const description = (item.querySelector("description")?.textContent || '')
+          .replace(/<[^>]*>?/gm, "").substring(0, 150);
+        const pubDate = item.querySelector("pubDate")?.textContent
+          ? new Date(item.querySelector("pubDate").textContent).toLocaleDateString()
+          : '';
 
-        // Check for enclosures (audio/video)
+        // Media detection
+        let mediaHTML = '';
         const enclosure = item.querySelector("enclosure");
-        let mediaElement = "";
         if (enclosure) {
           const type = enclosure.getAttribute("type");
           const url = enclosure.getAttribute("url");
-          if (type && url) {
-            if (type.includes("audio")) {
-              mediaElement = `<audio controls src="${url}"></audio>`;
-            } else if (type.includes("video")) {
-              mediaElement = `<video controls src="${url}"></video>`;
-            }
+          if (type?.includes("audio")) {
+            mediaHTML = `<audio controls src="${url}"></audio>`;
+          } else if (type?.includes("video")) {
+            mediaHTML = `<video controls src="${url}"></video>`;
           }
         }
 
@@ -78,8 +79,8 @@ document.addEventListener('DOMContentLoaded', () => {
               <button class="bookmark-btn" data-title="${title}" data-link="${link}">🔖</button>
             </div>
             <p>${description}...</p>
+            ${mediaHTML}
             <small>${pubDate}</small>
-            ${mediaElement}
             <div class="share-buttons">
               <button onclick="navigator.share ? navigator.share({title: '${title}', url: '${link}'}) : alert('Sharing not supported')">Share</button>
             </div>
@@ -113,23 +114,22 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // --- Save / Load Feeds ---
   function saveFeeds() {
-    localStorage.setItem('deevoFeeds', JSON.stringify(feeds));
+    localStorage.setItem('commandCenterFeeds', JSON.stringify(feeds));
   }
 
   function loadFeeds() {
-    const savedFeeds = localStorage.getItem('deevoFeeds');
-    feeds = savedFeeds ? JSON.parse(savedFeeds) : FINAL_DEFAULT_FEEDS.slice();
-    saveFeeds();
+    const savedFeeds = localStorage.getItem('commandCenterFeeds');
+    feeds = savedFeeds ? JSON.parse(savedFeeds) : DEFAULT_FEEDS;
   }
 
   function setAsDefaultFeeds() {
-    localStorage.setItem('deevoDefaultFeeds', JSON.stringify(feeds));
+    localStorage.setItem('commandCenterDefaultFeeds', JSON.stringify(feeds));
     alert("✅ Current feeds set as your default.");
   }
 
   function resetToDefaultFeeds() {
-    const storedDefault = localStorage.getItem('deevoDefaultFeeds');
-    feeds = storedDefault ? JSON.parse(storedDefault) : FINAL_DEFAULT_FEEDS.slice();
+    const storedDefault = localStorage.getItem('commandCenterDefaultFeeds');
+    feeds = storedDefault ? JSON.parse(storedDefault) : DEFAULT_FEEDS;
     saveFeeds();
     renderFeedList();
     initializeApp(true);
