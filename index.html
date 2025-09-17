@@ -3,60 +3,56 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>News Command Center</title>
+  <title>DEEVO Command Center</title>
   <link rel="stylesheet" href="style.css" />
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 </head>
 <body class="dark-mode">
   <div class="app-container">
     <!-- Sidebar -->
     <aside class="sidebar-feeds">
       <header>
-        <img src="logo.png" alt="App Logo" class="app-logo">
-        <h1>My Feeds</h1>
-        <div class="sidebar-buttons">
-          <button id="add-feed-btn"><i class="fas fa-plus"></i> Add Feed</button>
-          <button id="reset-feeds-btn"><i class="fas fa-undo"></i> Reset</button>
-          <button id="set-default-btn"><i class="fas fa-star"></i> Set as Default</button>
-          <button id="bookmarks-btn"><i class="fas fa-bookmark"></i> Bookmarks</button>
+        <h1 class="app-logo">DEEVO</h1>
+        <div class="sidebar-controls">
+          <input type="text" id="search-input" placeholder="Search feeds..." />
+          <button id="add-feed-btn">➕ Add Feed</button>
+          <button id="reset-feeds-btn">♻️ Reset</button>
+          <button id="toggle-dark">🌙 Mode</button>
+          <button id="bookmarks-btn">🔖 Bookmarks</button>
         </div>
-        <form id="search-form" class="search-bar" target="_blank">
-          <input type="text" id="search-input" placeholder="Search the web..." />
-          <button type="submit"><i class="fas fa-search"></i></button>
-        </form>
       </header>
-      <div id="feed-list"></div>
+
+      <!-- Scrollable Feed List -->
+      <div id="feed-list" class="feed-list"></div>
     </aside>
 
     <!-- Main Content -->
     <main class="main-content">
-      <header class="app-header">
-        <h1 class="app-title">News Command Center</h1>
-      </header>
-      <div id="article-container" class="article-container">
-        <p style="text-align:center;">Loading feeds...</p>
+      <div id="article-container">
+        <p style="text-align: center;">Loading feeds...</p>
       </div>
     </main>
-  </div>
-
-  <!-- Bookmarks Modal -->
-  <div id="bookmarks-modal" class="modal hidden">
-    <div class="modal-content">
-      <span id="close-bookmarks" class="close-btn">&times;</span>
-      <h2>🔖 Bookmarked Articles</h2>
-      <div id="bookmarks-list"></div>
-    </div>
   </div>
 
   <!-- Add Feed Modal -->
   <div id="add-feed-modal" class="modal hidden">
     <div class="modal-content">
       <h2>Add New Feed</h2>
-      <input type="text" id="feed-name-input" placeholder="Feed Name">
-      <input type="text" id="feed-url-input" placeholder="Feed URL">
+      <input type="text" id="feed-name-input" placeholder="Feed Name" />
+      <input type="text" id="feed-url-input" placeholder="Feed URL" />
       <div class="modal-actions">
         <button id="save-feed-btn">Save</button>
         <button id="cancel-feed-btn">Cancel</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bookmarks Modal -->
+  <div id="bookmarks-modal" class="modal hidden">
+    <div class="modal-content large">
+      <h2>🔖 Bookmarked Articles</h2>
+      <div id="bookmarks"></div>
+      <div class="modal-actions">
+        <button id="close-bookmarks-btn">Close</button>
       </div>
     </div>
   </div>
